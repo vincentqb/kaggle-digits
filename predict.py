@@ -16,7 +16,7 @@ train = train_data.iloc[:,1:].values
 test = pd.read_csv(test_file_name).values
 
 # Use Classifier to create model and make prediction
-rf = RandomForestClassifier()
+rf = RandomForestClassifier(n_estimators=100)
 rf.fit(train, target)
 predict = rf.predict(test)
 
