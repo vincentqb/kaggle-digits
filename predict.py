@@ -23,3 +23,10 @@ predict = rf.predict(test)
 # Save result
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt(predict_file_name, predict_table, header="ImageId,Label", comments="", delimiter=",", fmt="%d")
+
+# Visualize
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+train_square = dataset.iloc[:,1:].values.reshape(-1,28,28)
+plt.imshow(train_square[5000], cmap=cm.binary)
+plt.show()
