@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from time import clock
 
 # Read training data
 train_data = pd.read_csv('train.csv')
@@ -23,13 +24,19 @@ from sklearn import linear_model
 tol = 0.01
 C = 1
 # gamma = 0.001
-gamma = 0.1
+gamma = 0.01
 # clf = linear_model.SGDClassifier()
 # clf = svm.LinearSVC( tol=tol, C=C )
 algo = 'linear'
 # algo = 'rbf'
 clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True )
 # clf = svm.SVC(gamma=gamma)
+
+# algo = 'rbf'
+# tol = 0.001
+# gamma =  0.00728932024638
+# C = 2.82842712475
+# clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True )
 
 # Fit training data
 start = clock()
