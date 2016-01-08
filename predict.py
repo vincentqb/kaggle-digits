@@ -1,4 +1,3 @@
-from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 import pandas as pd
 
@@ -10,12 +9,35 @@ train = train_data.iloc[:,1:].values
 # Read test data
 test = pd.read_csv('test.csv').values
 
-# Use classifier to create model and make prediction
-rf = RandomForestClassifier(n_estimators=100)
-rf.fit(train, target)
-predict = rf.predict(test)
+# Select classifier
+# from sklearn.ensemble import RandomForestClassifier
+# clf = RandomForestClassifier(n_estimators=100)
 
-# Save results
+# MLPClassifier requires 0.18dev+ and is not available in 0.17
+# from sklearn.neural_network import MLPClassifier
+# clf = MLPClassifier(algorithm='l-bfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
+
+from sklearn import svm
+from sklearn import linear_model
+
+tol = 0.01
+C = 1
+# gamma = 0.001
+gamma = 0.1
+# clf = linear_model.SGDClassifier()
+# clf = svm.LinearSVC( tol=tol, C=C )
+algo = 'linear'
+# algo = 'rbf'
+clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True )
+# clf = svm.SVC(gamma=gamma)
+
+# Fit training data
+start = clock()
+clf.fit(train, target)
+print(clock() - start)
+
+# Predict and save results
+predict = clf.predict(test)
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
 
