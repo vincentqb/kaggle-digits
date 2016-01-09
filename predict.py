@@ -21,16 +21,17 @@ test = pd.read_csv('test.csv').values
 from sklearn import svm
 from sklearn import linear_model
 
-tol = 0.01
-C = 1
+clf = linear_model.SGDClassifier()
+# clf = svm.LinearSVC( tol=0.01, C=1 )
+
+# tol = 0.01
+# C = 1
 # gamma = 0.001
-gamma = 0.01
-# clf = linear_model.SGDClassifier()
-# clf = svm.LinearSVC( tol=tol, C=C )
-algo = 'linear'
+# gamma = 0.01
+# algo = 'linear'
 # algo = 'rbf'
-clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True )
-# clf = svm.SVC(gamma=gamma)
+# clf = svm.SVC( kernel=algo, verbose=True )
+# clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True )
 
 # algo = 'rbf'
 # tol = 0.001
