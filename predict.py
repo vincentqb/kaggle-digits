@@ -2,10 +2,16 @@ import numpy as np
 import pandas as pd
 from time import clock
 
+print('Loading data...')
+
 # Read training data
 train_data = pd.read_csv('train.csv')
 target = train_data['label'].values
 train = train_data.iloc[:,1:].values
+
+# Take fewer entries
+target = target[0::10]
+train = train[0::10]
 
 # Read test data
 test = pd.read_csv('test.csv').values
@@ -18,33 +24,37 @@ test = pd.read_csv('test.csv').values
 # from sklearn.neural_network import MLPClassifier
 # clf = MLPClassifier(algorithm='l-bfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
 
+# from sklearn import linear_model
+# clf = linear_model.SGDClassifier()
+
 from sklearn import svm
-from sklearn import linear_model
 
-clf = linear_model.SGDClassifier()
 # clf = svm.LinearSVC( tol=0.01, C=1 )
+clf = svm.SVC(gamma=0.001)
 
+# algo = 'linear'
 # tol = 0.01
+# tol = 0.1
 # C = 1
 # gamma = 0.001
 # gamma = 0.01
-# algo = 'linear'
-# algo = 'rbf'
-# clf = svm.SVC( kernel=algo, verbose=True )
-# clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True )
 
 # algo = 'rbf'
 # tol = 0.001
 # gamma =  0.00728932024638
 # C = 2.82842712475
-# clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True )
+
+# clf = svm.SVC( kernel=algo, verbose=True )
+# clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True, verbose=True)
 
 # Fit training data
+print('Fitting training data...')
 start = clock()
 clf.fit(train, target)
 print(clock() - start)
 
 # Predict and save results
+print('Extrapolating...')
 predict = clf.predict(test)
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
