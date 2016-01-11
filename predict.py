@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from time import clock
 
+### Load data...
+
 # print('Loading data...')
 # start = clock()
 
@@ -20,7 +22,8 @@ test = pd.read_csv('test.csv').values
 # Print time taken to load data
 # print(clock() - start)
 
-# Select classifier
+### Select Classifier
+
 # from sklearn.ensemble import RandomForestClassifier
 # clf = RandomForestClassifier(n_estimators=100)
 
@@ -31,7 +34,7 @@ test = pd.read_csv('test.csv').values
 # from sklearn import linear_model
 # clf = linear_model.SGDClassifier()
 
-from sklearn import svm
+# from sklearn import svm
 
 # clf = svm.LinearSVC( tol=0.01, C=1 )
 # clf = svm.SVC(gamma=0.001)
@@ -48,26 +51,30 @@ from sklearn import svm
 # gamma =  0.00728932024638
 # C = 2.82842712475
 
-# clf = svm.SVC( kernel=algo, verbose=True )
 # clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True, verbose=True)
 
-# Fit training data
+### Fit training data
+
 print('Fitting training data...')
 start = clock()
 clf.fit(train, target)
 print(clock() - start)
 
-# Predict and save results
+### Predict and save results
+
 print('Predicting...')
 start = clock()
 predict = clf.predict(test)
 print(clock() - start)
+
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
 
-# Visualize
+### Visualize
+
 # import matplotlib.pyplot as plt
 # import matplotlib.cm as cm
+
 # train_square = dataset.iloc[:,1:].values.reshape(-1,28,28)
 # plt.imshow(train_square[5000], cmap=cm.binary)
 # plt.show()
