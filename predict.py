@@ -2,7 +2,8 @@ import numpy as np
 import pandas as pd
 from time import clock
 
-print('Loading data...')
+# print('Loading data...')
+# start = clock()
 
 # Read training data
 train_data = pd.read_csv('train.csv')
@@ -15,6 +16,9 @@ train = train[0::10]
 
 # Read test data
 test = pd.read_csv('test.csv').values
+
+# Print time taken to load data
+# print(clock() - start)
 
 # Select classifier
 # from sklearn.ensemble import RandomForestClassifier
@@ -30,7 +34,7 @@ test = pd.read_csv('test.csv').values
 from sklearn import svm
 
 # clf = svm.LinearSVC( tol=0.01, C=1 )
-clf = svm.SVC(gamma=0.001)
+# clf = svm.SVC(gamma=0.001)
 
 # algo = 'linear'
 # tol = 0.01
@@ -54,8 +58,10 @@ clf.fit(train, target)
 print(clock() - start)
 
 # Predict and save results
-print('Extrapolating...')
+print('Predicting...')
+start = clock()
 predict = clf.predict(test)
+print(clock() - start)
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
 
