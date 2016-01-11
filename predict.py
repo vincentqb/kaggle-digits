@@ -4,9 +4,6 @@ from time import clock
 
 ### Load data...
 
-# print('Loading data...')
-# start = clock()
-
 # Read training data
 train_data = pd.read_csv('train.csv')
 target = train_data['label'].values
@@ -19,8 +16,23 @@ train = train[0::10]
 # Read test data
 test = pd.read_csv('test.csv').values
 
-# Print time taken to load data
-# print(clock() - start)
+### Transform data
+
+# Normalize data
+# train_max = train.max()
+# train = 2*train - train_max
+# test = 2*test - train_max
+
+from sklearn.decomposition import PCA
+
+print('Reduction...')
+start = clock()
+COMPONENT_NUM = 35
+pca = PCA(n_components=COMPONENT_NUM, whiten=True)
+pca.fit(train)
+train_data = pca.transform(train)
+test_data = pca.transform(test)
+print(clock() - start)
 
 ### Select Classifier
 
@@ -34,10 +46,11 @@ test = pd.read_csv('test.csv').values
 # from sklearn import linear_model
 # clf = linear_model.SGDClassifier()
 
-# from sklearn import svm
+from sklearn import svm
 
 # clf = svm.LinearSVC( tol=0.01, C=1 )
 # clf = svm.SVC(gamma=0.001)
+clf = svm.SVC()
 
 # algo = 'linear'
 # tol = 0.01
@@ -52,6 +65,17 @@ test = pd.read_csv('test.csv').values
 # C = 2.82842712475
 
 # clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True, verbose=True)
+
+# import logging
+# logging.basicConfig()
+
+# from sknn.mlp import Classifier, Layer
+# clf = Classifier(
+#     layers=[
+#         Layer("Rectifier", units=10),
+#         Layer("Linear")],
+#     learning_rate=0.02,
+#     n_iter=10)
 
 ### Fit training data
 
