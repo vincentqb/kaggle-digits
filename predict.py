@@ -5,18 +5,20 @@ from time import clock
 ### Load data...
 
 # Read training data
+start = clock()
 train_data = pd.read_csv('train.csv')
 label = train_data['label'].values
 train = train_data.iloc[:,1:].values
-print('Loaded {:d} train entries'.format(len(train)))
+print('Loaded {:d} train entries in {:3.1f} seconds.'.format(len(train), clock() - start))
 
 # Train on fewer entries
 # label = label[0::10]
 # train = train[0::10]
 
 # Read test data
+start = clock()
 test = pd.read_csv('test.csv').values
-print('Loaded {:d} test entries'.format(len(test)))
+print('Loaded {:d} test entries in {:3.1f} seconds.'.format(len(test), clock() - start))
 
 ### Transform data
 
@@ -92,12 +94,13 @@ np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', de
 ### Visualize
 
 from random import randint
-i = randint(0,len(train))
+i = randint(0,len(train)-1)
 print("Displaying train entry {:d} labelled {:d}.".format(i, label[i]))
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-train_square = dataset.iloc[:,1:].values.reshape(-1,28,28)
+train = train_data.iloc[:,1:].values
+train_square = train.reshape(-1,28,28)
 plt.imshow(train_square[i], cmap=cm.binary)
 plt.show()
