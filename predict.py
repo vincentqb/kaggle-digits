@@ -6,15 +6,17 @@ from time import clock
 
 # Read training data
 train_data = pd.read_csv('train.csv')
-target = train_data['label'].values
+label = train_data['label'].values
 train = train_data.iloc[:,1:].values
+print('Loaded {:d} train entries'.format(len(train)))
 
 # Train on fewer entries
-# target = target[0::10]
+# label = label[0::10]
 # train = train[0::10]
 
 # Read test data
 test = pd.read_csv('test.csv').values
+print('Loaded {:d} test entries'.format(len(test)))
 
 ### Transform data
 
@@ -48,11 +50,13 @@ print("Time: {:3.1f} seconds".format(clock() - start))
 # from sklearn import linear_model
 # clf = linear_model.SGDClassifier()
 
-from sklearn.svm import SVC, LinearSVC
-
+# from sklearn.svm import LinearSVC
 # clf = LinearSVC( tol=0.01, C=1 )
-clf = SVC( gamma=0.001 )
-# clf = SVC()
+
+from sklearn.svm import SVC
+clf = SVC()
+
+# from sklearn.svm import SVC
 
 # algo = 'linear'
 # tol = 0.01
@@ -72,7 +76,7 @@ clf = SVC( gamma=0.001 )
 
 print('Fitting training data...')
 start = clock()
-clf.fit(train, target)
+clf.fit(train, label)
 print("Time: {:3.1f} seconds".format(clock() - start))
 
 ### Predict and save results
@@ -87,9 +91,13 @@ np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', de
 
 ### Visualize
 
-# import matplotlib.pyplot as plt
-# import matplotlib.cm as cm
+from random import randint
+i = randint(0,len(train))
+print("Displaying train entry {:d} labelled {:d}.".format(i, label[i]))
 
-# train_square = dataset.iloc[:,1:].values.reshape(-1,28,28)
-# plt.imshow(train_square[5000], cmap=cm.binary)
-# plt.show()
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+
+train_square = dataset.iloc[:,1:].values.reshape(-1,28,28)
+plt.imshow(train_square[i], cmap=cm.binary)
+plt.show()
