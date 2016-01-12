@@ -10,8 +10,8 @@ target = train_data['label'].values
 train = train_data.iloc[:,1:].values
 
 # Take fewer entries
-target = target[0::10]
-train = train[0::10]
+# target = target[0::10]
+# train = train[0::10]
 
 # Read test data
 test = pd.read_csv('test.csv').values
@@ -23,15 +23,17 @@ test = pd.read_csv('test.csv').values
 # train = 2*train - train_max
 # test = 2*test - train_max
 
+print('Transforming...')
+
 from sklearn.decomposition import PCA
 
-print('Reduction...')
+n_comp = 35
+pca = PCA(n_components=n_comp, whiten=True)
+
 start = clock()
-COMPONENT_NUM = 35
-pca = PCA(n_components=COMPONENT_NUM, whiten=True)
 pca.fit(train)
-train_data = pca.transform(train)
-test_data = pca.transform(test)
+train = pca.transform(train)
+test = pca.transform(test)
 print(clock() - start)
 
 ### Select Classifier
@@ -46,11 +48,11 @@ print(clock() - start)
 # from sklearn import linear_model
 # clf = linear_model.SGDClassifier()
 
-from sklearn import svm
+from sklearn.svm import SVC, LinearSVC
 
-# clf = svm.LinearSVC( tol=0.01, C=1 )
-# clf = svm.SVC(gamma=0.001)
-clf = svm.SVC()
+# clf = LinearSVC( tol=0.01, C=1 )
+# clf = SVC(gamma=0.001)
+clf = SVC()
 
 # algo = 'linear'
 # tol = 0.01
@@ -64,18 +66,7 @@ clf = svm.SVC()
 # gamma =  0.00728932024638
 # C = 2.82842712475
 
-# clf = svm.SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True, verbose=True)
-
-# import logging
-# logging.basicConfig()
-
-# from sknn.mlp import Classifier, Layer
-# clf = Classifier(
-#     layers=[
-#         Layer("Rectifier", units=10),
-#         Layer("Linear")],
-#     learning_rate=0.02,
-#     n_iter=10)
+# clf = SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True, verbose=True)
 
 ### Fit training data
 
