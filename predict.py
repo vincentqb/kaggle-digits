@@ -22,23 +22,23 @@ print('Loaded {:d} test entries in {:3.1f} seconds.'.format(len(test), clock() -
 
 ### Transform data
 
+# print('Transforming...')
+
 # Normalize data
 # train_max = train.max()
 # train = 2*train - train_max
 # test = 2*test - train_max
 
-print('Transforming...')
-
-from sklearn.decomposition import PCA
-
-n_comp = 35
-pca = PCA(n_components=n_comp, whiten=True)
-
-start = clock()
-pca.fit(train)
-train = pca.transform(train)
-test = pca.transform(test)
-print("Time: {:3.1f} seconds.".format(clock() - start))
+# from sklearn.decomposition import PCA
+# 
+# n_comp = 35
+# pca = PCA(n_components=n_comp, whiten=True)
+# 
+# start = clock()
+# pca.fit(train)
+# train = pca.transform(train)
+# test = pca.transform(test)
+# print("Time: {:3.1f} seconds.".format(clock() - start))
 
 ### Select Classifier
 
@@ -53,10 +53,10 @@ print("Time: {:3.1f} seconds.".format(clock() - start))
 # clf = linear_model.SGDClassifier()
 
 # from sklearn.svm import LinearSVC
-# clf = LinearSVC( tol=0.01, C=1 )
+# clf = LinearSVC(tol=0.01, C=1)
 
-from sklearn.svm import SVC
-clf = SVC()
+# from sklearn.svm import SVC
+# clf = SVC()
 
 # from sklearn.svm import SVC
 
@@ -67,12 +67,12 @@ clf = SVC()
 # gamma = 0.001
 # gamma = 0.01
 
-# algo = 'rbf'
-# tol = 0.001
-# gamma =  0.00728932024638
-# C = 2.82842712475
+algo = 'rbf'
+tol = 0.001
+gamma =  0.00728932024638
+C = 2.82842712475
 
-# clf = SVC( kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True, verbose=True)
+clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
 
 ### Fit training data
 
