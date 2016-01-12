@@ -9,7 +9,7 @@ train_data = pd.read_csv('train.csv')
 target = train_data['label'].values
 train = train_data.iloc[:,1:].values
 
-# Take fewer entries
+# Train on fewer entries
 # target = target[0::10]
 # train = train[0::10]
 
@@ -34,7 +34,7 @@ start = clock()
 pca.fit(train)
 train = pca.transform(train)
 test = pca.transform(test)
-print(clock() - start)
+print("Time: {:3.1f} seconds".format(clock() - start))
 
 ### Select Classifier
 
@@ -51,8 +51,8 @@ print(clock() - start)
 from sklearn.svm import SVC, LinearSVC
 
 # clf = LinearSVC( tol=0.01, C=1 )
-# clf = SVC(gamma=0.001)
-clf = SVC()
+clf = SVC( gamma=0.001 )
+# clf = SVC()
 
 # algo = 'linear'
 # tol = 0.01
@@ -73,14 +73,14 @@ clf = SVC()
 print('Fitting training data...')
 start = clock()
 clf.fit(train, target)
-print(clock() - start)
+print("Time: {:3.1f} seconds".format(clock() - start))
 
 ### Predict and save results
 
 print('Predicting...')
 start = clock()
 predict = clf.predict(test)
-print(clock() - start)
+print("Time: {:3.1f} seconds".format(clock() - start))
 
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
