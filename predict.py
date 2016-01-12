@@ -38,7 +38,7 @@ start = clock()
 pca.fit(train)
 train = pca.transform(train)
 test = pca.transform(test)
-print("Time: {:3.1f} seconds".format(clock() - start))
+print("Time: {:3.1f} seconds.".format(clock() - start))
 
 ### Select Classifier
 
@@ -79,14 +79,14 @@ clf = SVC()
 print('Fitting training data...')
 start = clock()
 clf.fit(train, label)
-print("Time: {:3.1f} seconds".format(clock() - start))
+print("Time: {:3.1f} seconds.".format(clock() - start))
 
 ### Predict and save results
 
 print('Predicting...')
 start = clock()
 predict = clf.predict(test)
-print("Time: {:3.1f} seconds".format(clock() - start))
+print("Time: {:3.1f} seconds.".format(clock() - start))
 
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
