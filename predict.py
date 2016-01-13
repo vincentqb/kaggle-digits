@@ -20,6 +20,20 @@ start = clock()
 test = pd.read_csv('test.csv').values
 print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() - start))
 
+### Visualize
+
+from random import randint
+
+i = randint(0,len(train)-1)
+print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
+
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+
+train_square = train.reshape(-1,28,28)
+plt.imshow(train_square[i], cmap=cm.binary)
+plt.show()
+
 ### Transform data
 
 # Normalize data
@@ -94,18 +108,3 @@ print("Extrapolated to test data in {:.0f} seconds.".format(clock() - start))
 
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
-
-### Visualize
-
-from random import randint
-
-i = randint(0,len(train)-1)
-print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
-
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-
-train = train_frame.iloc[:,1:].values
-train_square = train.reshape(-1,28,28)
-plt.imshow(train_square[i], cmap=cm.binary)
-plt.show()
