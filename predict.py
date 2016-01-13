@@ -15,24 +15,23 @@ print('Loaded {:d} train entries in {:3.0f} seconds.'.format(len(train), clock()
 # label = label[0::10]
 # train = train[0::10]
 
-# Read test data
-start = clock()
+# Read test data start = clock()
 test = pd.read_csv('test.csv').values
 print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() - start))
 
 ### Visualize
 
-from random import randint
-
-i = randint(0,len(train)-1)
-print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
-
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-
-train_square = train.reshape(-1,28,28)
-plt.imshow(train_square[i], cmap=cm.binary)
-plt.show()
+# from random import randint
+# 
+# i = randint(0,len(train)-1)
+# print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
+# 
+# import matplotlib.pyplot as plt
+# import matplotlib.cm as cm
+# 
+# train_square = train.reshape(-1,28,28)
+# plt.imshow(train_square[i], cmap=cm.binary)
+# plt.show()
 
 ### Transform data
 
