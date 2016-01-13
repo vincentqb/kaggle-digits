@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from time import clock
 
-### Load data...
+### Load data
 
 # Read training data
 start = clock()
@@ -15,7 +15,8 @@ print('Loaded {:d} train entries in {:3.0f} seconds.'.format(len(train), clock()
 # label = label[0::10]
 # train = train[0::10]
 
-# Read test data start = clock()
+# Read test data 
+start = clock()
 test = pd.read_csv('test.csv').values
 print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() - start))
 
