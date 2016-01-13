@@ -99,11 +99,13 @@ start = clock()
 clf.fit(train, label)
 print("Fitted training data in {:.0f} seconds.".format(clock() - start))
 
-### Predict and save results
+### Extrapolate to test data
 
 start = clock()
 predict = clf.predict(test)
 print("Extrapolated to test data in {:.0f} seconds.".format(clock() - start))
+
+### Save results
 
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
