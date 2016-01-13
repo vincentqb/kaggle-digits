@@ -6,10 +6,10 @@ from time import clock
 
 # Read training data
 start = clock()
-train_data = pd.read_csv('train.csv')
-label = train_data['label'].values
-train = train_data.iloc[:,1:].values
-print('Loaded {:d} train entries in {:3.1f} seconds.'.format(len(train), clock() - start))
+train_frame = pd.read_csv('train.csv')
+label = train_frame['label'].values
+train = train_frame.iloc[:,1:].values
+print('Loaded {:d} train entries in {:3.0f} seconds.'.format(len(train), clock() - start))
 
 # Train on fewer entries
 # label = label[0::10]
@@ -18,7 +18,7 @@ print('Loaded {:d} train entries in {:3.1f} seconds.'.format(len(train), clock()
 # Read test data
 start = clock()
 test = pd.read_csv('test.csv').values
-print('Loaded {:d} test entries in {:3.1f} seconds.'.format(len(test), clock() - start))
+print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() - start))
 
 ### Transform data
 
@@ -36,7 +36,7 @@ start = clock()
 pca.fit(train)
 train = pca.transform(train)
 test = pca.transform(test)
-print("Transformed data in {:3.1f} seconds.".format(clock() - start))
+print("Transformed data in {:3.0f} seconds.".format(clock() - start))
 
 ### Select Classifier
 
@@ -72,17 +72,25 @@ clf = SVC()
 
 # clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
 
+### Cross validation
+
+from sklearn.cross_validation import cross_val_score
+
+start = clock()
+scores = cross_val_score(clf, train, label)
+print("Performed cross validation in {:3.0f} seconds: {:d} folds with mean accuracy {:0.4f} +/- {:0.4f}.".format(clock() - start, len(scores), scores.mean(), scores.std()))
+
 ### Fit training data
 
 start = clock()
 clf.fit(train, label)
-print("Fitted training data in {:3.1f} seconds.".format(clock() - start))
+print("Fitted training data in {:3.0f} seconds.".format(clock() - start))
 
 ### Predict and save results
 
 start = clock()
 predict = clf.predict(test)
-print("Extrapolated to test data in {:3.1f} seconds.".format(clock() - start))
+print("Extrapolated to test data in {:3.0f} seconds.".format(clock() - start))
 
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
@@ -98,5 +106,5 @@ import matplotlib.cm as cm
 
 train = train_data.iloc[:,1:].values
 train_square = train.reshape(-1,28,28)
-plt.imshow(train_square[i], cmap=cm.binary)
+plt.imshow(-train_square[i], cmap=cm.binary)
 plt.show()
