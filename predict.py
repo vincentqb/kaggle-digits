@@ -78,7 +78,7 @@ from sklearn.cross_validation import cross_val_score
 
 start = clock()
 scores = cross_val_score(clf, train, label)
-print("Performed cross validation in {:3.0f} seconds: {:d} folds with mean accuracy {:0.4f} +/- {:0.4f}.".format(clock() - start, len(scores), scores.mean(), scores.std()))
+print("Performed cross validation in {:3.0f} seconds: {:d} folds with accuracy {:0.4f} +/- {:0.4f}.".format(clock() - start, len(scores), scores.mean(), scores.std()))
 
 ### Fit training data
 
@@ -104,7 +104,7 @@ print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-train = train_data.iloc[:,1:].values
+train = train_frame.iloc[:,1:].values
 train_square = train.reshape(-1,28,28)
 plt.imshow(-train_square[i], cmap=cm.binary)
 plt.show()
