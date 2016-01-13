@@ -22,23 +22,21 @@ print('Loaded {:d} test entries in {:3.1f} seconds.'.format(len(test), clock() -
 
 ### Transform data
 
-# print('Transforming...')
-
 # Normalize data
 # train_max = train.max()
 # train = 2*train - train_max
 # test = 2*test - train_max
 
-# from sklearn.decomposition import PCA
-# 
-# n_comp = 35
-# pca = PCA(n_components=n_comp, whiten=True)
-# 
-# start = clock()
-# pca.fit(train)
-# train = pca.transform(train)
-# test = pca.transform(test)
-# print("Time: {:3.1f} seconds.".format(clock() - start))
+from sklearn.decomposition import PCA
+
+n_comp = 35
+pca = PCA(n_components=n_comp, whiten=True)
+
+start = clock()
+pca.fit(train)
+train = pca.transform(train)
+test = pca.transform(test)
+print("Transformed data in {:3.1f} seconds.".format(clock() - start))
 
 ### Select Classifier
 
@@ -55,8 +53,8 @@ print('Loaded {:d} test entries in {:3.1f} seconds.'.format(len(test), clock() -
 # from sklearn.svm import LinearSVC
 # clf = LinearSVC(tol=0.01, C=1)
 
-# from sklearn.svm import SVC
-# clf = SVC()
+from sklearn.svm import SVC
+clf = SVC()
 
 # from sklearn.svm import SVC
 
@@ -67,26 +65,24 @@ print('Loaded {:d} test entries in {:3.1f} seconds.'.format(len(test), clock() -
 # gamma = 0.001
 # gamma = 0.01
 
-algo = 'rbf'
-tol = 0.001
-gamma =  0.00728932024638
-C = 2.82842712475
+# algo = 'rbf'
+# tol = 0.001
+# gamma =  0.00728932024638
+# C = 2.82842712475
 
-clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
+# clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
 
 ### Fit training data
 
-print('Fitting training data...')
 start = clock()
 clf.fit(train, label)
-print("Time: {:3.1f} seconds.".format(clock() - start))
+print("Fitted training data in {:3.1f} seconds.".format(clock() - start))
 
 ### Predict and save results
 
-print('Predicting...')
 start = clock()
 predict = clf.predict(test)
-print("Time: {:3.1f} seconds.".format(clock() - start))
+print("Extrapolated to test data in {:3.1f} seconds.".format(clock() - start))
 
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
@@ -95,7 +91,7 @@ np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', de
 
 from random import randint
 i = randint(0,len(train)-1)
-print("Displaying train entry {:d} labelled {:d}.".format(i, label[i]))
+print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
