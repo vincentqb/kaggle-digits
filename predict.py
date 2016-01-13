@@ -78,19 +78,19 @@ from sklearn.cross_validation import cross_val_score
 
 start = clock()
 scores = cross_val_score(clf, train, label)
-print("Performed cross validation in {:3.0f} seconds: {:d} folds with accuracy {:0.4f} +/- {:0.4f}.".format(clock() - start, len(scores), scores.mean(), scores.std()))
+print("Performed cross validation in {:.0f} seconds: {:d} folds with accuracy {:0.4f} +/- {:0.4f}.".format(clock() - start, len(scores), scores.mean(), scores.std()))
 
 ### Fit training data
 
 start = clock()
 clf.fit(train, label)
-print("Fitted training data in {:3.0f} seconds.".format(clock() - start))
+print("Fitted training data in {:.0f} seconds.".format(clock() - start))
 
 ### Predict and save results
 
 start = clock()
 predict = clf.predict(test)
-print("Extrapolated to test data in {:3.0f} seconds.".format(clock() - start))
+print("Extrapolated to test data in {:.0f} seconds.".format(clock() - start))
 
 predict_table = np.c_[range(1,len(test)+1), predict]
 np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
@@ -98,6 +98,7 @@ np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', de
 ### Visualize
 
 from random import randint
+
 i = randint(0,len(train)-1)
 print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
 
@@ -106,5 +107,5 @@ import matplotlib.cm as cm
 
 train = train_frame.iloc[:,1:].values
 train_square = train.reshape(-1,28,28)
-plt.imshow(-train_square[i], cmap=cm.binary)
+plt.imshow(train_square[i], cmap=cm.binary)
 plt.show()
