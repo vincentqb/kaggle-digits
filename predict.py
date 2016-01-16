@@ -41,16 +41,16 @@ print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() -
 # train = 2*train - train_max
 # test = 2*test - train_max
 
-from sklearn.decomposition import PCA
-
-n_comp = 35
-pca = PCA(n_components=n_comp, whiten=True)
-
-start = clock()
-pca.fit(train)
-train = pca.transform(train)
-test = pca.transform(test)
-print("Transformed data in {:3.0f} seconds.".format(clock() - start))
+# from sklearn.decomposition import PCA
+# 
+# n_comp = 35
+# pca = PCA(n_components=n_comp, whiten=True)
+# 
+# start = clock()
+# pca.fit(train)
+# train = pca.transform(train)
+# test = pca.transform(test)
+# print("Transformed data in {:3.0f} seconds.".format(clock() - start))
 
 ### Select Classifier
 
@@ -67,8 +67,8 @@ print("Transformed data in {:3.0f} seconds.".format(clock() - start))
 # from sklearn.svm import LinearSVC
 # clf = LinearSVC(tol=0.01, C=1)
 
-from sklearn.svm import SVC
-clf = SVC()
+# from sklearn.svm import SVC
+# clf = SVC()
 
 # algo = 'linear'
 # tol = 0.01
@@ -82,6 +82,34 @@ clf = SVC()
 
 # from sklearn.svm import SVC
 # clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
+
+import lasagne
+from lasagne import layers
+from lasagne.updates import nesterov_momentum
+from nolearn.lasagne import NeuralNet
+# from nolearn.lasagne import visualize
+
+clf = NeuralNet(
+        layers=[('input', layers.InputLayer),
+                ('hidden', layers.DenseLayer),
+                ('output', layers.DenseLayer),
+                ],
+        # layer parameters:
+        input_shape=(None,1,28,28),
+        # hidden_num_units=1000, # number of units in 'hidden' layer
+        hidden_num_units=10, # number of units in 'hidden' layer
+        output_nonlinearity=lasagne.nonlinearities.softmax,
+        output_num_units=10,  # 10 target values for the digits 0, 1, 2, ..., 9
+
+        # optimization method:
+        update=nesterov_momentum,
+        # update_learning_rate=0.0001,
+        update_learning_rate=0.001,
+        update_momentum=0.9,
+
+        max_epochs=15,
+        verbose=1,
+        )
 
 ### Cross validation
 
