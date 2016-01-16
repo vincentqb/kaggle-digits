@@ -83,32 +83,31 @@ print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() -
 # from sklearn.svm import SVC
 # clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
 
+# from lasagne.nonlinearities import softmax
 import lasagne
 from lasagne import layers
 from lasagne.updates import nesterov_momentum
 from nolearn.lasagne import NeuralNet
-# from nolearn.lasagne import visualize
 
 clf = NeuralNet(
-        layers=[('input', layers.InputLayer),
-                ('hidden', layers.DenseLayer),
-                ('output', layers.DenseLayer),
-                ],
-        # layer parameters:
-        input_shape=(None,1,28,28),
-        # hidden_num_units=1000, # number of units in 'hidden' layer
-        hidden_num_units=10, # number of units in 'hidden' layer
-        output_nonlinearity=lasagne.nonlinearities.softmax,
-        output_num_units=10,  # 10 target values for the digits 0, 1, 2, ..., 9
+        layers = [('input', layers.InputLayer),
+                  ('hidden', layers.DenseLayer),
+                  ('output', layers.DenseLayer),
+                  ],
 
-        # optimization method:
-        update=nesterov_momentum,
-        # update_learning_rate=0.0001,
-        update_learning_rate=0.001,
-        update_momentum=0.9,
+        # Layer parameters
+        input_shape = (None,1,28,28),
+        hidden_num_units = 10,          # Number of units in hidden layer (10, 1000, ...)
+        output_nonlinearity = lasagne.nonlinearities.softmax,
+        output_num_units = 10,          # 10 target values for the digits 0, 1, 2, ..., 9
 
-        max_epochs=15,
-        verbose=1,
+        # Optimization method
+        update = nesterov_momentum,
+        update_learning_rate = 0.001,   # 0.001, 0.0001, ...
+        update_momentum = 0.9,
+
+        max_epochs = 15,
+        verbose = 1,
         )
 
 ### Cross validation
