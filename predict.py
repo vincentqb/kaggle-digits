@@ -83,10 +83,9 @@ print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() -
 # from sklearn.svm import SVC
 # clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
 
-# from lasagne.nonlinearities import softmax
-import lasagne
 from lasagne import layers
 from lasagne.updates import nesterov_momentum
+from lasagne.nonlinearities import softmax
 from nolearn.lasagne import NeuralNet
 
 clf = NeuralNet(
@@ -98,7 +97,7 @@ clf = NeuralNet(
         # Layer parameters
         input_shape = (None,1,28,28),
         hidden_num_units = 10,          # Number of units in hidden layer (10, 1000, ...)
-        output_nonlinearity = lasagne.nonlinearities.softmax,
+        output_nonlinearity = softmax,
         output_num_units = 10,          # 10 target values for the digits 0, 1, 2, ..., 9
 
         # Optimization method
