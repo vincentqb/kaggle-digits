@@ -104,8 +104,8 @@ clf = NeuralNet(
         update = nesterov_momentum,
         update_learning_rate = 0.001,   # 0.001, 0.0001, ...
         update_momentum = 0.9,
-
         max_epochs = 15,
+
         verbose = 1,
         )
 
