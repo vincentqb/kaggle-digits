@@ -41,17 +41,17 @@ print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - 
 # train = 2*train - train_max
 # test = 2*test - train_max
 
-# from sklearn.decomposition import PCA
-# 
-# n_comp = 35
-# pca = PCA(n_components=n_comp, whiten=True)
-# 
-# start = clock()
-# pca.fit(train)
-# train = pca.transform(train)
-# test = pca.transform(test)
-# variance = sum(pca.explained_variance_ratio_)
-# print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%} of the variance.".format(clock() - start, n_comp, variance))
+from sklearn.decomposition import PCA
+
+n_comp = 35
+pca = PCA(n_components=n_comp, whiten=True)
+
+start = clock()
+pca.fit(train)
+train = pca.transform(train)
+test = pca.transform(test)
+variance = sum(pca.explained_variance_ratio_)
+print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%} of the variance.".format(clock() - start, n_comp, variance))
 
 ### Select Classifier
 
@@ -127,7 +127,9 @@ gs = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
 
 start = clock()
 gs.fit(train_few, label_few)
-print("Parameter optimized {} yielding {.4f} in {:.0f} seconds.".format(gs.best_params_, gs.best_score_, clock() - start))
+print("Parameter optimized {} yielding {:.4f} in {:.0f} seconds.".format(gs.best_params_, gs.best_score_, clock() - start))
+
+exit()
 
 ### Cross validation
 
