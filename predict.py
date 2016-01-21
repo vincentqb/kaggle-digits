@@ -12,8 +12,8 @@ train = train_frame.iloc[:,1:].values
 print('Loaded {:d} train entries in {:3.0f} seconds.'.format(len(train), clock() - start))
 
 # Train on fewer entries
-# label = label[0::10]
-# train = train[0::10]
+label = label[0::10]
+train = train[0::10]
 
 # Read test data 
 start = clock()
@@ -50,7 +50,8 @@ print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() -
 # pca.fit(train)
 # train = pca.transform(train)
 # test = pca.transform(test)
-# print("Transformed data in {:3.0f} seconds.".format(clock() - start))
+# variance = sum(pca.explained_variance_ratio_)
+# print("Transformed data in {:3.0f} seconds using {:d} components explaining {:.2f} of the variance.".format(clock() - start, n_comp, variance))
 
 ### Select Classifier
 
@@ -108,6 +109,18 @@ clf = NeuralNet(
 
         verbose = 1,
         )
+
+### Optimize classifer's parameters
+
+# Provide parameter spaces
+params = [{'C': np.logspace(-1, 10), 'gamma': np.logspace(-10, -1)}]
+
+# Run exhaustive grid search
+start_time = time.time()
+clf = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
+clf.best_score_
+clf.best_params_
+print("Parameter optimized in {:.0f} seconds.".format(clock() - start))
 
 ### Cross validation
 
