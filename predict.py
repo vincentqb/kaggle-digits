@@ -50,8 +50,8 @@ start = clock()
 pca.fit(train)
 train = pca.transform(train)
 test = pca.transform(test)
-variance = sum(pca.explained_variance_ratio_)
-print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%} of the variance.".format(clock() - start, n_comp, variance))
+print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%} of the variance.".format(
+    clock() - start, n_comp, sum(pca.explained_variance_ratio_)))
 
 ### Select Classifier
 
@@ -125,7 +125,8 @@ params = [{'C': np.logspace(-1, 3), 'gamma': np.logspace(-4, -1)}]
 start = clock()
 gs = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
 gs.fit(train_few, label_few)
-print("Parameter optimized {} yielding {:.4f} in {:.0f} seconds.".format(gs.best_params_, gs.best_score_, clock() - start))
+print("Parameter optimized {} yielding {:.4f} in {:.0f} seconds.".format(
+    gs.best_params_, gs.best_score_, clock() - start))
 
 ### Cross validation
 
@@ -133,7 +134,8 @@ from sklearn.cross_validation import cross_val_score
 
 start = clock()
 scores = cross_val_score(clf, train, label)
-print("Performed cross validation in {:.0f} seconds: {:d} folds with accuracy {:0.4f} +/- {:0.4f}.".format(clock() - start, len(scores), scores.mean(), scores.std()))
+print("Performed {:d}-fold cross validation in {:.0f} seconds with accuracy {:0.4f} +/- {:0.4f}.".format(
+    len(scores), clock() - start, scores.mean(), scores.std()))
 
 ### Fit training data
 
