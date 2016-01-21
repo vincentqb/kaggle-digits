@@ -112,6 +112,8 @@ clf = NeuralNet(
 
 ### Optimize classifer's parameters
 
+from sklearn.grid_search import GridSearchCV
+
 # Provide parameter spaces
 params = [{'C': np.logspace(-1, 10), 'gamma': np.logspace(-10, -1)}]
 
