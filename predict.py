@@ -12,8 +12,8 @@ train = train_frame.iloc[:,1:].values
 print('Loaded {:d} train entries in {:.0f} seconds.'.format(len(train), clock() - start))
 
 # Train on fewer entries
-label = label[0::10]
-train = train[0::10]
+# label = label[0::10]
+# train = train[0::10]
 
 # Read test data 
 start = clock()
@@ -114,22 +114,18 @@ clf = SVC()
 
 from sklearn.grid_search import GridSearchCV
 
-# Provide parameter spaces
-# params = [{'C': np.logspace(-1, 5), 'gamma': np.logspace(-5, -1)}]
-params = [{'C': np.logspace(-1, 1), 'gamma': np.logspace(-2, -1)}]
-
 # Search on fewer entries
 label_few = label[0::10]
 train_few = train[0::10]
 
-# Run exhaustive grid search
-gs = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
+# Provide parameter spaces
+params = [{'C': np.logspace(-1, 3), 'gamma': np.logspace(-4, -1)}]
 
+# Run exhaustive grid search
 start = clock()
+gs = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
 gs.fit(train_few, label_few)
 print("Parameter optimized {} yielding {:.4f} in {:.0f} seconds.".format(gs.best_params_, gs.best_score_, clock() - start))
-
-exit()
 
 ### Cross validation
 
