@@ -9,7 +9,7 @@ start = clock()
 train_frame = pd.read_csv('train.csv')
 label = train_frame['label'].values
 train = train_frame.iloc[:,1:].values
-print('Loaded {:d} train entries in {:3.0f} seconds.'.format(len(train), clock() - start))
+print('Loaded {:d} train entries in {:.0f} seconds.'.format(len(train), clock() - start))
 
 # Train on fewer entries
 label = label[0::10]
@@ -18,7 +18,7 @@ train = train[0::10]
 # Read test data 
 start = clock()
 test = pd.read_csv('test.csv').values
-print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() - start))
+print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - start))
 
 ### Visualize
 
@@ -51,7 +51,7 @@ print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() -
 # train = pca.transform(train)
 # test = pca.transform(test)
 # variance = sum(pca.explained_variance_ratio_)
-# print("Transformed data in {:3.0f} seconds using {:d} components explaining {:.2f} of the variance.".format(clock() - start, n_comp, variance))
+# print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%} of the variance.".format(clock() - start, n_comp, variance))
 
 ### Select Classifier
 
@@ -68,8 +68,8 @@ print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() -
 # from sklearn.svm import LinearSVC
 # clf = LinearSVC(tol=0.01, C=1)
 
-# from sklearn.svm import SVC
-# clf = SVC()
+from sklearn.svm import SVC
+clf = SVC()
 
 # algo = 'linear'
 # tol = 0.01
@@ -84,45 +84,50 @@ print('Loaded {:d} test entries in {:3.0f} seconds.'.format(len(test), clock() -
 # from sklearn.svm import SVC
 # clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
 
-from lasagne import layers
-from lasagne.updates import nesterov_momentum
-from lasagne.nonlinearities import softmax
-from nolearn.lasagne import NeuralNet
-
-clf = NeuralNet(
-        layers = [('input', layers.InputLayer),
-                  ('hidden', layers.DenseLayer),
-                  ('output', layers.DenseLayer),
-                  ],
-
-        # Layer parameters
-        input_shape = (None,1,28,28),
-        hidden_num_units = 10,          # Number of units in hidden layer (10, 1000, ...)
-        output_nonlinearity = softmax,
-        output_num_units = 10,          # 10 target values for the digits 0, 1, 2, ..., 9
-
-        # Optimization method
-        update = nesterov_momentum,
-        update_learning_rate = 0.001,   # 0.001, 0.0001, ...
-        update_momentum = 0.9,
-        max_epochs = 15,
-
-        verbose = 1,
-        )
+# from lasagne import layers
+# from lasagne.updates import nesterov_momentum
+# from lasagne.nonlinearities import softmax
+# from nolearn.lasagne import NeuralNet
+# 
+# clf = NeuralNet(
+#         layers = [('input', layers.InputLayer),
+#                   ('hidden', layers.DenseLayer),
+#                   ('output', layers.DenseLayer),
+#                   ],
+# 
+#         # Layer parameters
+#         input_shape = (None,1,28,28),
+#         hidden_num_units = 10,          # Number of units in hidden layer (10, 1000, ...)
+#         output_nonlinearity = softmax,
+#         output_num_units = 10,          # 10 target values for the digits 0, 1, 2, ..., 9
+# 
+#         # Optimization method
+#         update = nesterov_momentum,
+#         update_learning_rate = 0.001,   # 0.001, 0.0001, ...
+#         update_momentum = 0.9,
+#         max_epochs = 15,
+# 
+#         verbose = 1,
+#         )
 
 ### Optimize classifer's parameters
 
 from sklearn.grid_search import GridSearchCV
 
 # Provide parameter spaces
-params = [{'C': np.logspace(-1, 10), 'gamma': np.logspace(-10, -1)}]
+# params = [{'C': np.logspace(-1, 5), 'gamma': np.logspace(-5, -1)}]
+params = [{'C': np.logspace(-1, 1), 'gamma': np.logspace(-2, -1)}]
+
+# Search on fewer entries
+label_few = label[0::10]
+train_few = train[0::10]
 
 # Run exhaustive grid search
-start_time = time.time()
-clf = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
-clf.best_score_
-clf.best_params_
-print("Parameter optimized in {:.0f} seconds.".format(clock() - start))
+gs = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
+
+start = clock()
+gs.fit(train_few, label_few)
+print("Parameter optimized {} yielding {.4f} in {:.0f} seconds.".format(gs.best_params_, gs.best_score_, clock() - start))
 
 ### Cross validation
 
