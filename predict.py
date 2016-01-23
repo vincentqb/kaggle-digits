@@ -62,8 +62,8 @@ print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - 
 # from sklearn.neural_network import MLPClassifier
 # clf = MLPClassifier(algorithm='l-bfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
 
-# from sklearn import linear_model
-# clf = linear_model.SGDClassifier()
+# from sklearn.linear_model import SGDClassifier
+# clf = SGDClassifier()
 
 # from sklearn.svm import LinearSVC
 # clf = LinearSVC(tol=0.01, C=1)
@@ -86,11 +86,11 @@ print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - 
 
 from lasagne import layers
 from lasagne.updates import nesterov_momentum
-from lasagne.nonlinearities import softmax
+from lasagne.nonlinearities import softmax, rectify
 from nolearn.lasagne import NeuralNet
 
 clf = NeuralNet(
-    layers=[  
+    layers = [  
         # Three layers: one hidden layer
         ('input', layers.InputLayer),
         ('hidden', layers.DenseLayer),
@@ -109,6 +109,38 @@ clf = NeuralNet(
     update_momentum = 0.9,
     max_epochs = 15,
 
+    verbose = 1,
+    )
+
+clf = NeuralNet(
+    layers = [
+    ('input', layers.InputLayer),
+    ('conv1', layers.Conv2DLayer),      # Convolutional layer
+    ('pool1', layers.MaxPool2DLayer),   # Like downsampling, for execution speed
+    ('conv2', layers.Conv2DLayer),
+    ('hidden3', layers.DenseLayer),
+    ('output', layers.DenseLayer),
+    ],
+
+    input_shape = (None, 784),
+    conv1_num_filters = 7, 
+    conv1_filter_size = (3, 3), 
+    conv1_nonlinearity = rectify,
+        
+    pool1_pool_size = (2, 2),
+        
+    conv2_num_filters = 12, 
+    conv2_filter_size = (2, 2),    
+    conv2_nonlinearity = rectify,
+        
+    hidden3_num_units = 100,
+    output_num_units = 10, 
+    output_nonlinearity = softmax,
+    
+    update_learning_rate = 0.001,
+    update_momentum = 0.9,
+    
+    max_epochs = 15,
     verbose = 1,
     )
 
