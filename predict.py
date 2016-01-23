@@ -56,7 +56,7 @@ print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - 
 ### Select Classifier
 
 # from sklearn.ensemble import RandomForestClassifier
-# clf = RandomForestClassifier(n_estimators=100)
+# clf = RandomForestClassifier(n_estimators = 100)
 
 # MLPClassifier requires 0.18dev+ and is not available in 0.17
 # from sklearn.neural_network import MLPClassifier
@@ -90,7 +90,8 @@ from lasagne.nonlinearities import softmax
 from nolearn.lasagne import NeuralNet
 
 clf = NeuralNet(
-    layers=[  # three layers: one hidden layer
+    layers=[  
+        # Three layers: one hidden layer
         ('input', layers.InputLayer),
         ('hidden', layers.DenseLayer),
         ('output', layers.DenseLayer),
@@ -98,7 +99,7 @@ clf = NeuralNet(
 
     # Layer parameters
     input_shape = (None,784),
-    hidden_num_units = 10,          # Number of units in hidden layer (10, 1000, ...)
+    hidden_num_units = 100,         # Number of units in hidden layer (10, 1000, ...)
     output_nonlinearity = softmax,  # Output layer uses identity function
     output_num_units = 10,          # 10 target values for the digits 0, 1, 2, ..., 9
 
