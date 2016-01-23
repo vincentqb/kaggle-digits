@@ -39,10 +39,13 @@ def visualize(train, label):
 
 ### Transform data
 
-# Normalize data
-# train_max = train.max()
-# train = 2*train - train_max
-# test = 2*test - train_max
+def normalize(train, test):
+    train_max = train.max()
+
+    # Center data
+    train = 2*train - train_max
+    test = 2*test - train_max
+    return (train, test)
 
 def PCA(train, test):
     from sklearn.decomposition import PCA
@@ -75,10 +78,9 @@ def PCA(train, test):
 # from sklearn.svm import LinearSVC
 # clf = LinearSVC(tol = 0.01, C = 1)
 
-# from sklearn.svm import SVC
-# clf = SVC()
-
 def SVC():
+    from sklearn.svm import SVC
+
     algo = 'linear'
     tol = 0.01
     C = 1
@@ -89,8 +91,8 @@ def SVC():
     C = 2.82842712475
     gamma =  0.00728932024638
     
-    from sklearn.svm import SVC
-    clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
+    # clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
+    clf = SVC()
 
     return clf
 
@@ -161,15 +163,12 @@ clf2 = NeuralNet(
     verbose = 1,
     )
 
-# Theano is strict on the format used for numbers
+# Theano is strict on the format of floats and ints
 train = train.astype(np.float32)
 label = label.astype(np.int32)
 test = test.astype(np.float32)
 
 ### Optimize classifer's parameters
-    
-# Parameter space to search
-params = [{'C': np.logspace(-1, 3), 'gamma': np.logspace(-4, -1)}]
 
 def grid_search(train, label, params):
     from sklearn.grid_search import GridSearchCV
@@ -184,7 +183,9 @@ def grid_search(train, label, params):
     gs.fit(train_few, label_few)
     print("Parameter optimized {} yielding {:.4f} in {:.0f} seconds.".format(
         gs.best_params_, gs.best_score_, clock() - start))
-
+    
+# Parameter space to search
+# params = [{'C': np.logspace(-1, 3), 'gamma': np.logspace(-4, -1)}]
 # grid_search(train, label, params)
 
 ### Cross validation
