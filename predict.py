@@ -84,36 +84,10 @@ print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - 
 # from sklearn.svm import SVC
 # clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
 
-# from lasagne import layers
-# from lasagne.updates import nesterov_momentum
-# from lasagne.nonlinearities import softmax
-# from nolearn.lasagne import NeuralNet
-# 
-# clf = NeuralNet(
-#         layers = [('input', layers.InputLayer),
-#                   ('hidden', layers.DenseLayer),
-#                   ('output', layers.DenseLayer),
-#                   ],
-# 
-#         # Layer parameters
-#         input_shape = (None,1,28,28),
-#         hidden_num_units = 10,          # Number of units in hidden layer (10, 1000, ...)
-#         output_nonlinearity = softmax,
-#         output_num_units = 10,          # 10 target values for the digits 0, 1, 2, ..., 9
-# 
-#         # Optimization method
-#         update = nesterov_momentum,
-#         update_learning_rate = 0.001,   # 0.001, 0.0001, ...
-#         update_momentum = 0.9,
-#         max_epochs = 15,
-# 
-#         verbose = 1,
-#         )
-
 from lasagne import layers
 from lasagne.updates import nesterov_momentum
-from nolearn.lasagne import NeuralNet
 from lasagne.nonlinearities import softmax
+from nolearn.lasagne import NeuralNet
 
 clf = NeuralNet(
     layers=[  # three layers: one hidden layer
@@ -124,18 +98,16 @@ clf = NeuralNet(
 
     # Layer parameters
     input_shape = (None,784),
-    hidden_num_units = 10,          # Number of units in hidden layer
-    # output_nonlinearity = None,   # Output layer uses identity function
+    hidden_num_units = 10,          # Number of units in hidden layer (10, 1000, ...)
     output_nonlinearity = softmax,  # Output layer uses identity function
-    output_num_units = 10,          # 10 target values
+    output_num_units = 10,          # 10 target values for the digits 0, 1, 2, ..., 9
 
     # optimization method
-    update=nesterov_momentum,
-    update_learning_rate = 0.01,
+    update = nesterov_momentum,
+    update_learning_rate = 0.001,   # 0.01, 0.001, 0.0001, ...
     update_momentum = 0.9,
     max_epochs = 15,
 
-    # regression = True,  # flag to indicate we're dealing with regression problem
     verbose = 1,
     )
 
