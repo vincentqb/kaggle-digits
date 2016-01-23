@@ -105,17 +105,19 @@ clf = NeuralNet(
     layers = [  
         # Three layers: one hidden layer
         ('input', layers.InputLayer),
-        ('hidden', layers.DenseLayer),
+        ('hidden1', layers.DenseLayer),
+        # ('hidden2', layers.DenseLayer),
         ('output', layers.DenseLayer),
         ],
 
     # Layer parameters
     input_shape = (None,784),
-    hidden_num_units = 100,         # Number of units in hidden layer (10, 1000, ...)
-    output_nonlinearity = softmax,  # Output layer uses identity function
-    output_num_units = 10,          # 10 target values for the digits 0, 1, 2, ..., 9
+    hidden1_num_units = 100,         # Number of units in hidden layer (10, 1000, ...)
+    # hidden2_num_units = 100,       # Number of units in hidden layer (10, 1000, ...)
+    output_nonlinearity = softmax,   # Output layer uses identity function
+    output_num_units = 10,           # Output 10 target values for the digits 0, 1, 2, ..., 9
 
-    # optimization method
+    # Optimization method
     update = nesterov_momentum,
     update_learning_rate = 0.001,   # 0.01, 0.001, 0.0001, ...
     update_momentum = 0.9,
@@ -124,7 +126,7 @@ clf = NeuralNet(
     verbose = 1,
     )
 
-clf = NeuralNet(
+clf2 = NeuralNet(
     layers = [
     ('input', layers.InputLayer),
     ('conv1', layers.Conv2DLayer),      # Convolutional layer
@@ -135,6 +137,7 @@ clf = NeuralNet(
     ],
 
     input_shape = (None, 784),
+    
     conv1_num_filters = 7, 
     conv1_filter_size = (3, 3), 
     conv1_nonlinearity = rectify,
@@ -146,13 +149,15 @@ clf = NeuralNet(
     conv2_nonlinearity = rectify,
         
     hidden3_num_units = 100,
+
     output_num_units = 10, 
     output_nonlinearity = softmax,
     
+    # Optimization method
     update_learning_rate = 0.001,
     update_momentum = 0.9,
-    
     max_epochs = 15,
+
     verbose = 1,
     )
 
