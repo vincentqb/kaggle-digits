@@ -22,17 +22,20 @@ print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - 
 
 ### Visualize
 
-# from random import randint
-# 
-# i = randint(0,len(train)-1)
-# print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
-# 
-# import matplotlib.pyplot as plt
-# import matplotlib.cm as cm
-# 
-# train_square = train.reshape(-1,28,28)
-# plt.imshow(train_square[i], cmap=cm.binary)
-# plt.show()
+def visualize(train, label):
+    from random import randint
+    
+    i = randint(0,len(train)-1)
+    print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
+    
+    import matplotlib.pyplot as plt
+    import matplotlib.cm as cm
+    
+    train_square = train.reshape(-1,28,28)
+    plt.imshow(train_square[i], cmap=cm.binary)
+    plt.show()
+
+# visualize(train, label)
 
 ### Transform data
 
@@ -41,17 +44,21 @@ print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - 
 # train = 2*train - train_max
 # test = 2*test - train_max
 
-# from sklearn.decomposition import PCA
-# 
-# n_comp = 35
-# pca = PCA(n_components=n_comp, whiten=True)
-# 
-# start = clock()
-# pca.fit(train)
-# train = pca.transform(train)
-# test = pca.transform(test)
-# print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%} of the variance.".format(
-#     clock() - start, n_comp, sum(pca.explained_variance_ratio_)))
+def PCA(train, test):
+    from sklearn.decomposition import PCA
+    
+    n_comp = 35
+    pca = PCA(n_components=n_comp, whiten=True)
+    
+    start = clock()
+    pca.fit(train)
+    train = pca.transform(train)
+    test = pca.transform(test)
+    print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%} of the variance.".format(
+        clock() - start, n_comp, sum(pca.explained_variance_ratio_)))
+    return (train, test)
+
+# (train, test) = PCA(train, test)
 
 ### Select Classifier
 
@@ -60,29 +67,34 @@ print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - 
 
 # MLPClassifier requires 0.18dev+ and is not available in 0.17
 # from sklearn.neural_network import MLPClassifier
-# clf = MLPClassifier(algorithm='l-bfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
+# clf = MLPClassifier(algorithm = 'l-bfgs', alpha = 1e-5, hidden_layer_sizes = (5, 2), random_state = 1)
 
 # from sklearn.linear_model import SGDClassifier
 # clf = SGDClassifier()
 
 # from sklearn.svm import LinearSVC
-# clf = LinearSVC(tol=0.01, C=1)
+# clf = LinearSVC(tol = 0.01, C = 1)
 
 # from sklearn.svm import SVC
 # clf = SVC()
 
-# algo = 'linear'
-# tol = 0.01
-# C = 1
-# gamma = 0.01
+def SVC():
+    algo = 'linear'
+    tol = 0.01
+    C = 1
+    gamma = 0.01
+    
+    algo = 'rbf'
+    tol = 0.001
+    C = 2.82842712475
+    gamma =  0.00728932024638
+    
+    from sklearn.svm import SVC
+    clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
 
-# algo = 'rbf'
-# tol = 0.001
-# C = 2.82842712475
-# gamma =  0.00728932024638
+    return clf
 
-# from sklearn.svm import SVC
-# clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
+# clf = SVC()
 
 from lasagne import layers
 from lasagne.updates import nesterov_momentum
@@ -144,27 +156,31 @@ clf = NeuralNet(
     verbose = 1,
     )
 
+# Theano is strict on the format used for numbers
 train = train.astype(np.float32)
 label = label.astype(np.int32)
 test = test.astype(np.float32)
 
 ### Optimize classifer's parameters
+    
+# Parameter space to search
+params = [{'C': np.logspace(-1, 3), 'gamma': np.logspace(-4, -1)}]
 
-# from sklearn.grid_search import GridSearchCV
-# 
-# # Search on fewer entries
-# label_few = label[0::10]
-# train_few = train[0::10]
-# 
-# # Provide parameter spaces
-# params = [{'C': np.logspace(-1, 3), 'gamma': np.logspace(-4, -1)}]
-# 
-# # Run exhaustive grid search
-# start = clock()
-# gs = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
-# gs.fit(train_few, label_few)
-# print("Parameter optimized {} yielding {:.4f} in {:.0f} seconds.".format(
-#     gs.best_params_, gs.best_score_, clock() - start))
+def grid_search(train, label, params):
+    from sklearn.grid_search import GridSearchCV
+    
+    # Search on fewer entries
+    label_few = label[0::10]
+    train_few = train[0::10]
+    
+    # Run exhaustive grid search
+    start = clock()
+    gs = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
+    gs.fit(train_few, label_few)
+    print("Parameter optimized {} yielding {:.4f} in {:.0f} seconds.".format(
+        gs.best_params_, gs.best_score_, clock() - start))
+
+# grid_search(train, label, params)
 
 ### Cross validation
 
