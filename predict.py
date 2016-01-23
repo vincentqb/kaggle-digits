@@ -41,17 +41,17 @@ print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - 
 # train = 2*train - train_max
 # test = 2*test - train_max
 
-from sklearn.decomposition import PCA
-
-n_comp = 35
-pca = PCA(n_components=n_comp, whiten=True)
-
-start = clock()
-pca.fit(train)
-train = pca.transform(train)
-test = pca.transform(test)
-print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%} of the variance.".format(
-    clock() - start, n_comp, sum(pca.explained_variance_ratio_)))
+# from sklearn.decomposition import PCA
+# 
+# n_comp = 35
+# pca = PCA(n_components=n_comp, whiten=True)
+# 
+# start = clock()
+# pca.fit(train)
+# train = pca.transform(train)
+# test = pca.transform(test)
+# print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%} of the variance.".format(
+#     clock() - start, n_comp, sum(pca.explained_variance_ratio_)))
 
 ### Select Classifier
 
@@ -68,8 +68,8 @@ print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%
 # from sklearn.svm import LinearSVC
 # clf = LinearSVC(tol=0.01, C=1)
 
-from sklearn.svm import SVC
-clf = SVC()
+# from sklearn.svm import SVC
+# clf = SVC()
 
 # algo = 'linear'
 # tol = 0.01
@@ -110,23 +110,56 @@ clf = SVC()
 #         verbose = 1,
 #         )
 
+from lasagne import layers
+from lasagne.updates import nesterov_momentum
+from nolearn.lasagne import NeuralNet
+from lasagne.nonlinearities import softmax
+
+clf = NeuralNet(
+    layers=[  # three layers: one hidden layer
+        ('input', layers.InputLayer),
+        ('hidden', layers.DenseLayer),
+        ('output', layers.DenseLayer),
+        ],
+
+    # Layer parameters
+    input_shape = (None,784),
+    hidden_num_units = 10,          # Number of units in hidden layer
+    # output_nonlinearity = None,   # Output layer uses identity function
+    output_nonlinearity = softmax,  # Output layer uses identity function
+    output_num_units = 10,          # 10 target values
+
+    # optimization method
+    update=nesterov_momentum,
+    update_learning_rate = 0.01,
+    update_momentum = 0.9,
+    max_epochs = 15,
+
+    # regression = True,  # flag to indicate we're dealing with regression problem
+    verbose = 1,
+    )
+
+train = train.astype(np.float32)
+label = label.astype(np.int32)
+test = test.astype(np.float32)
+
 ### Optimize classifer's parameters
 
-from sklearn.grid_search import GridSearchCV
-
-# Search on fewer entries
-label_few = label[0::10]
-train_few = train[0::10]
-
-# Provide parameter spaces
-params = [{'C': np.logspace(-1, 3), 'gamma': np.logspace(-4, -1)}]
-
-# Run exhaustive grid search
-start = clock()
-gs = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
-gs.fit(train_few, label_few)
-print("Parameter optimized {} yielding {:.4f} in {:.0f} seconds.".format(
-    gs.best_params_, gs.best_score_, clock() - start))
+# from sklearn.grid_search import GridSearchCV
+# 
+# # Search on fewer entries
+# label_few = label[0::10]
+# train_few = train[0::10]
+# 
+# # Provide parameter spaces
+# params = [{'C': np.logspace(-1, 3), 'gamma': np.logspace(-4, -1)}]
+# 
+# # Run exhaustive grid search
+# start = clock()
+# gs = GridSearchCV(estimator = clf, param_grid = params, n_jobs = 2)
+# gs.fit(train_few, label_few)
+# print("Parameter optimized {} yielding {:.4f} in {:.0f} seconds.".format(
+#     gs.best_params_, gs.best_score_, clock() - start))
 
 ### Cross validation
 
