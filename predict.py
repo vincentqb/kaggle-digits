@@ -116,7 +116,7 @@ clf2 = NeuralNet(
         ],
 
     # Layer parameters
-    input_shape = (None,784),
+    input_shape = (None,28*28),
     hidden1_num_units = 100,         # Number of units in hidden layer (10, 1000, ...)
     # hidden2_num_units = 100,       # Number of units in hidden layer (10, 1000, ...)
     output_nonlinearity = softmax,   # Output layer uses identity function
