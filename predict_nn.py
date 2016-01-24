@@ -22,91 +22,14 @@ test = pd.read_csv('test.csv').values
 test = test.reshape(-1,1,28,28)
 print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - start))
 
-### Visualize
-
-def visualize(train, label):
-    from random import randint
-    
-    i = randint(0,len(train)-1)
-    print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
-    
-    import matplotlib.pyplot as plt
-    import matplotlib.cm as cm
-    
-    # train_square = train.reshape(-1,28,28)
-    train_square = train
-    plt.imshow(train_square[i], cmap=cm.binary)
-    plt.show()
-
-# visualize(train, label)
-
-### Transform data
-
-def normalize(train, test):
-    train_max = train.max()
-
-    # Center data
-    train = 2*train - train_max
-    test = 2*test - train_max
-    return (train, test)
-
-def PCA(train, test):
-    from sklearn.decomposition import PCA
-    
-    n_comp = 35
-    pca = PCA(n_components=n_comp, whiten=True)
-    
-    start = clock()
-    pca.fit(train)
-    train = pca.transform(train)
-    test = pca.transform(test)
-    print("Transformed data in {:.0f} seconds using {:d} components explaining {:.0%} of the variance.".format(
-        clock() - start, n_comp, sum(pca.explained_variance_ratio_)))
-    return (train, test)
-
-# (train, test) = PCA(train, test)
-
 ### Select Classifier
-
-# from sklearn.ensemble import RandomForestClassifier
-# clf = RandomForestClassifier(n_estimators = 100)
-
-# MLPClassifier requires 0.18dev+ and is not available in 0.17
-# from sklearn.neural_network import MLPClassifier
-# clf = MLPClassifier(algorithm = 'l-bfgs', alpha = 1e-5, hidden_layer_sizes = (5, 2), random_state = 1)
-
-# from sklearn.linear_model import SGDClassifier
-# clf = SGDClassifier()
-
-# from sklearn.svm import LinearSVC
-# clf = LinearSVC(tol = 0.01, C = 1)
-
-def SVC():
-    from sklearn.svm import SVC
-
-    algo = 'linear'
-    tol = 0.01
-    C = 1
-    gamma = 0.01
-    
-    algo = 'rbf'
-    tol = 0.001
-    C = 2.82842712475
-    gamma =  0.00728932024638
-    
-    # clf = SVC(kernel=algo, tol=tol, C=C, gamma=gamma, shrinking=True)
-    clf = SVC()
-
-    return clf
-
-# clf = SVC()
 
 from lasagne import layers
 from lasagne.updates import nesterov_momentum
 from lasagne.nonlinearities import softmax, rectify
 from nolearn.lasagne import NeuralNet
 
-clf2 = NeuralNet(
+clf1 = NeuralNet(
     layers = [  
         # Three layers: one hidden layer
         ('input', layers.InputLayer),
@@ -116,9 +39,8 @@ clf2 = NeuralNet(
         ],
 
     # Layer parameters
-    input_shape = (None,784),
+    input_shape = (None,28*28),
     hidden1_num_units = 100,         # Number of units in hidden layer (10, 1000, ...)
-    # hidden2_num_units = 100,       # Number of units in hidden layer (10, 1000, ...)
     output_nonlinearity = softmax,   # Output layer uses identity function
     output_num_units = 10,           # Output 10 target values for the digits 0, 1, 2, ..., 9
 
@@ -170,30 +92,29 @@ clf2 = NeuralNet(
     verbose = 1,
     )
 
-clf = NeuralNet(
+clf3 = NeuralNet(
     layers = [
     ('input', layers.InputLayer),
     ('conv1', layers.Conv2DLayer),      # Convolutional layer
-    # ('pool1', layers.MaxPool2DLayer),   # Like downsampling, for execution speed
-    # ('conv2', layers.Conv2DLayer),
-    # ('hidden3', layers.DenseLayer),
+    ('pool1', layers.MaxPool2DLayer),   # Like downsampling, for execution speed
+    ('conv2', layers.Conv2DLayer),
+    ('hidden3', layers.DenseLayer),
     ('output', layers.DenseLayer),
     ],
 
-    # input_shape = (None, 28, 28),
     input_shape = (None, 1, 28, 28),
     
     conv1_num_filters = 7, 
     conv1_filter_size = (3, 3), 
     conv1_nonlinearity = rectify,
         
-    # pool1_pool_size = (2, 2),
+    pool1_pool_size = (2, 2),
         
-    # conv2_num_filters = 12, 
-    # conv2_filter_size = (2, 2),    
-    # conv2_nonlinearity = rectify,
+    conv2_num_filters = 12, 
+    conv2_filter_size = (2, 2),    
+    conv2_nonlinearity = rectify,
         
-    # hidden3_num_units = 100,
+    hidden3_num_units = 100,
 
     output_num_units = 10, 
     output_nonlinearity = softmax,
@@ -205,6 +126,8 @@ clf = NeuralNet(
 
     verbose = 1,
     )
+
+clf = clf3
 
 # Theano is strict on the format of floats and ints
 train = train.astype(np.float32)
