@@ -57,45 +57,6 @@ clf2 = NeuralNet(
     layers = [
     ('input', layers.InputLayer),
     ('conv1', layers.Conv2DLayer),      # Convolutional layer
-    # ('conv1', layers.Conv1DLayer),      # Convolutional layer
-    # ('pool1', layers.MaxPool1DLayer),   # Like downsampling, for execution speed
-    # ('conv2', layers.Conv1DLayer),
-    # ('hidden3', layers.DenseLayer),
-    ('output', layers.DenseLayer),
-    ],
-
-    # input_shape = (None, 784),
-    input_shape = (None, 28, 28),
-    
-    conv1_num_filters = 7, 
-    conv1_filter_size = (3, 3), 
-    # conv1_filter_size = 3, 
-    conv1_nonlinearity = rectify,
-        
-    # pool1_pool_size = 1,
-        
-    # conv2_num_filters = 12, 
-    # conv2_filter_size = (2, 2),    
-    # conv2_filter_size = 4,    
-    # conv2_nonlinearity = rectify,
-        
-    # hidden3_num_units = 100,
-
-    output_num_units = 10, 
-    output_nonlinearity = softmax,
-    
-    # Optimization method
-    update_learning_rate = 0.001,
-    update_momentum = 0.9,
-    max_epochs = 15,
-
-    verbose = 1,
-    )
-
-clf3 = NeuralNet(
-    layers = [
-    ('input', layers.InputLayer),
-    ('conv1', layers.Conv2DLayer),      # Convolutional layer
     ('pool1', layers.MaxPool2DLayer),   # Like downsampling, for execution speed
     ('conv2', layers.Conv2DLayer),
     ('hidden3', layers.DenseLayer),
@@ -127,7 +88,7 @@ clf3 = NeuralNet(
     verbose = 1,
     )
 
-clf = clf3
+clf = clf2
 
 # Theano is strict on the format of floats and ints
 train = train.astype(np.float32)
