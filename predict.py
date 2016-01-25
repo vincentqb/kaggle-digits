@@ -176,12 +176,12 @@ def grid_search(train, label, params):
 
 ### Cross validation
 
-from sklearn.cross_validation import cross_val_score
-
-start = clock()
-scores = cross_val_score(clf, train, label)
-print("Performed {:d}-fold cross validation in {:.0f} seconds with accuracy {:0.4f} +/- {:0.4f}.".format(
-    len(scores), clock() - start, scores.mean(), scores.std()))
+# from sklearn.cross_validation import cross_val_score
+# 
+# start = clock()
+# scores = cross_val_score(clf, train, label)
+# print("Performed {:d}-fold cross validation in {:.0f} seconds with accuracy {:0.4f} +/- {:0.4f}.".format(
+#     len(scores), clock() - start, scores.mean(), scores.std()))
 
 ### Fit training data
 
