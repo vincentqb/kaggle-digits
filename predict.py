@@ -102,17 +102,16 @@ def SVC():
 
     return clf
 
-clf = SVC()
+# clf = SVC()
 
 # Lasagne classifier with neural network
-
-from lasagne import layers
-from lasagne.updates import nesterov_momentum
-from lasagne.nonlinearities import softmax, rectify
-from nolearn.lasagne import NeuralNet
-
 def NeuralNet():
-     return NeuralNet(
+    from lasagne import layers
+    from lasagne.updates import nesterov_momentum
+    from lasagne.nonlinearities import softmax, rectify
+    from nolearn.lasagne import NeuralNet
+
+    return NeuralNet(
         layers = [  
             # Three layers: one hidden layer
             ('input', layers.InputLayer),
@@ -146,8 +145,8 @@ test = test.astype(np.float32)
 
 # Classifiers from Scikit Flow
 
-# from skflow import TensorFlowLinearClassifier
-# clf = TensorFlowLinearClassifier(n_classes = 10)
+from skflow import TensorFlowLinearClassifier
+clf = TensorFlowLinearClassifier(n_classes = 10)
 
 # from skflow import TensorFlowLinearRegressor
 # clf = TensorFlowLinearRegressor()
