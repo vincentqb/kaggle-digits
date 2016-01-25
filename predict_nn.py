@@ -32,10 +32,10 @@ from nolearn.lasagne import NeuralNet
 clf = NeuralNet(
     layers = [
     ('input', layers.InputLayer),
-    ('conv1', layers.Conv2DLayer),      # Convolutional layer
+    ('conv1', layers.Conv2DLayer),      # First convolutional layer
     ('pool1', layers.MaxPool2DLayer),   # Like downsampling, for execution speed
-    ('conv2', layers.Conv2DLayer),
-    ('hidden3', layers.DenseLayer),
+    ('conv2', layers.Conv2DLayer),      # Second convolutional layer
+    ('hidden3', layers.DenseLayer),     # Fully connected hidden layer
     ('output', layers.DenseLayer),
     ],
 
