@@ -29,31 +29,7 @@ from lasagne.updates import nesterov_momentum
 from lasagne.nonlinearities import softmax, rectify
 from nolearn.lasagne import NeuralNet
 
-clf1 = NeuralNet(
-    layers = [  
-        # Three layers: one hidden layer
-        ('input', layers.InputLayer),
-        ('hidden1', layers.DenseLayer),
-        # ('hidden2', layers.DenseLayer),
-        ('output', layers.DenseLayer),
-        ],
-
-    # Layer parameters
-    input_shape = (None,28*28),
-    hidden1_num_units = 100,         # Number of units in hidden layer (10, 1000, ...)
-    output_nonlinearity = softmax,   # Output layer uses identity function
-    output_num_units = 10,           # Output 10 target values for the digits 0, 1, 2, ..., 9
-
-    # Optimization method
-    update = nesterov_momentum,
-    update_learning_rate = 0.001,   # 0.01, 0.001, 0.0001, ...
-    update_momentum = 0.9,
-    max_epochs = 15,
-
-    verbose = 1,
-    )
-
-clf2 = NeuralNet(
+clf = NeuralNet(
     layers = [
     ('input', layers.InputLayer),
     ('conv1', layers.Conv2DLayer),      # Convolutional layer
@@ -87,8 +63,6 @@ clf2 = NeuralNet(
 
     verbose = 1,
     )
-
-clf = clf2
 
 # Theano is strict on the format of floats and ints
 train = train.astype(np.float32)
