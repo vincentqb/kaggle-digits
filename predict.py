@@ -42,6 +42,9 @@ def visualize(train, label):
 
 ### Transform data
 
+# from sklearn.preprocessing import StandardScaler
+# train = StandardScaler().fit_transform(train)
+
 def normalize(train, test):
     train_max = train.max()
 
@@ -138,6 +141,17 @@ def NeuralNet():
 train = train.astype(np.float32)
 label = label.astype(np.int32)
 test = test.astype(np.float32)
+
+# Classifiers from Scikit Flow
+
+# from skflow import TensorFlowLinearClassifier
+# clf = TensorFlowLinearClassifier(n_classes = 10)
+
+# from skflow import TensorFlowLinearRegressor
+# clf = TensorFlowLinearRegressor()
+
+# from skflow import TensorFlowDNNClassifier
+# clf = TensorFlowDNNClassifier(hidden_units = [10, 20, 10], n_classes = 10)
 
 ### Optimize classifer's parameters
 
