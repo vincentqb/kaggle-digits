@@ -104,6 +104,8 @@ def SVC():
 
 clf = SVC()
 
+# Lasagne classifier with neural network
+
 from lasagne import layers
 from lasagne.updates import nesterov_momentum
 from lasagne.nonlinearities import softmax, rectify
