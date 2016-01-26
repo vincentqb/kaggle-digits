@@ -67,7 +67,7 @@ def PCA(train, test):
         clock() - start, n_comp, sum(pca.explained_variance_ratio_)))
     return (train, test)
 
-(train, test) = PCA(train, test)
+# (train, test) = PCA(train, test)
 
 ### Select Classifier
 
@@ -146,7 +146,7 @@ test = test.astype(np.float32)
 # Classifiers from Scikit Flow
 
 from skflow import TensorFlowLinearClassifier
-clf = TensorFlowLinearClassifier(n_classes = 10)
+clf = TensorFlowLinearClassifier(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01)
 
 # from skflow import TensorFlowLinearRegressor
 # clf = TensorFlowLinearRegressor()
