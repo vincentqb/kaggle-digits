@@ -145,14 +145,16 @@ test = test.astype(np.float32)
 
 # Classifiers from Scikit Flow
 
-from skflow import TensorFlowLinearClassifier
-clf = TensorFlowLinearClassifier(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01)
+# from skflow import TensorFlowLinearClassifier
+# clf = TensorFlowLinearClassifier(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01)
 
 # from skflow import TensorFlowLinearRegressor
 # clf = TensorFlowLinearRegressor()
 
-# from skflow import TensorFlowDNNClassifier
-# clf = TensorFlowDNNClassifier(hidden_units = [10, 20, 10], n_classes = 10)
+from skflow import TensorFlowDNNClassifier
+# Optimizer = SGD, Adam, Adagrad
+# clf = TensorFlowDNNClassifier(hidden_units = [10, 20, 10], n_classes = 10, batch_size = 128, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
+clf = TensorFlowDNNClassifier(hidden_units = [10, 20, 10], n_classes = 10, batch_size = 128, steps = 1000, learning_rate = 0.01)
 
 ### Optimize classifer's parameters
 
