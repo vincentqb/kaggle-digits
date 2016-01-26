@@ -153,8 +153,7 @@ test = test.astype(np.float32)
 
 from skflow import TensorFlowDNNClassifier
 # Optimizer = SGD, Adam, Adagrad
-# clf = TensorFlowDNNClassifier(hidden_units = [10, 20, 10], n_classes = 10, batch_size = 128, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
-clf = TensorFlowDNNClassifier(hidden_units = [10, 20, 10], n_classes = 10, batch_size = 128, steps = 1000, learning_rate = 0.01)
+clf = TensorFlowDNNClassifier(hidden_units = [10, 20, 10], n_classes = 10, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
 ### Optimize classifer's parameters
 
