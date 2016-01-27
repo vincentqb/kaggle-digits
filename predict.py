@@ -153,7 +153,7 @@ test = test.astype(np.float32)
 # clf = TensorFlowLinearRegressor(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
 
 from skflow import TensorFlowDNNClassifier
-clf = TensorFlowDNNClassifier(hidden_units = [1000, 2000, 1000], 
+clf = TensorFlowDNNClassifier(hidden_units = [500, 1000, 1000, 1000, 1000, 500], 
                               n_classes = 10, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
 ### Optimize classifer's parameters
