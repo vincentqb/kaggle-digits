@@ -42,8 +42,8 @@ def visualize(train, label):
 
 ### Transform data
 
-from sklearn.preprocessing import StandardScaler
-train = StandardScaler().fit_transform(train)
+# from sklearn.preprocessing import StandardScaler
+# train = StandardScaler().fit_transform(train)
 
 def normalize(train, test):
     train_max = train.max()
@@ -144,17 +144,17 @@ label = label.astype(np.int32)
 test = test.astype(np.float32)
 
 # Classifiers from Scikit Flow
+# Optimizer choices: SGD, Adam, Adagrad
 
 # from skflow import TensorFlowLinearClassifier
 # clf = TensorFlowLinearClassifier(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
 
-from skflow import TensorFlowLinearRegressor
-clf = TensorFlowLinearRegressor(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
+# from skflow import TensorFlowLinearRegressor
+# clf = TensorFlowLinearRegressor(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
 
-# from skflow import TensorFlowDNNClassifier
-# Optimizer = SGD, Adam, Adagrad
-# clf = TensorFlowDNNClassifier(hidden_units = [100, 200, 100], 
-#                               n_classes = 10, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
+from skflow import TensorFlowDNNClassifier
+clf = TensorFlowDNNClassifier(hidden_units = [1000, 2000, 1000], 
+                              n_classes = 10, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
 ### Optimize classifer's parameters
 
