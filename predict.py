@@ -201,5 +201,5 @@ print("Extrapolated to test data in {:.0f} seconds.".format(clock() - start))
 ### Save results
 
 test_frame['ImageId'] = range(1,len(test)+1)
-test_frame['Label'] = predict[:,1]
+test_frame['Label'] = predict
 test_frame.to_csv(predict_file, cols = ('ImageId', 'Label'), index = None)
