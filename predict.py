@@ -6,10 +6,10 @@ from time import clock
 
 # Read training data
 start = clock()
-train_frame = pd.read_csv('train.csv')
+train_frame = pd.read_csv('data/train.csv')
 label = train_frame['label'].values
 train = train_frame.iloc[:,1:].values
-# train = train.reshape(-1,28,28)
+train = train.reshape(-1,28,28)
 print('Loaded {:d} train entries in {:.0f} seconds.'.format(len(train), clock() - start))
 
 # Train on fewer entries
@@ -18,8 +18,8 @@ print('Loaded {:d} train entries in {:.0f} seconds.'.format(len(train), clock() 
 
 # Read test data 
 start = clock()
-test = pd.read_csv('test.csv').values
-# test = test.reshape(-1,28,28)
+test = pd.read_csv('data/test.csv').values
+test = test.reshape(-1,28,28)
 print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - start))
 
 ### Visualize
@@ -153,7 +153,8 @@ test = test.astype(np.float32)
 # clf = TensorFlowLinearRegressor(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
 
 from skflow import TensorFlowDNNClassifier
-clf = TensorFlowDNNClassifier(hidden_units = [500, 1000, 1000, 1000, 1000, 500], 
+# clf = TensorFlowDNNClassifier(hidden_units = [500, 1000, 1000, 1000, 1000, 500], 
+clf = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
                               n_classes = 10, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
 ### Optimize classifer's parameters

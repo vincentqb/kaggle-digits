@@ -6,7 +6,7 @@ from time import clock
 
 # Read training data
 start = clock()
-train_frame = pd.read_csv('train.csv')
+train_frame = pd.read_csv('data/train.csv')
 label = train_frame['label'].values
 train = train_frame.iloc[:,1:].values
 train = train.reshape(-1,1,28,28)
@@ -18,7 +18,7 @@ print('Loaded {:d} train entries in {:.0f} seconds.'.format(len(train), clock() 
 
 # Read test data 
 start = clock()
-test = pd.read_csv('test.csv').values
+test = pd.read_csv('data/test.csv').values
 test = test.reshape(-1,1,28,28)
 print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - start))
 
