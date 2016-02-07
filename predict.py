@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 from time import clock
 
@@ -9,7 +8,7 @@ start = clock()
 train_frame = pd.read_csv('data/train.csv')
 label = train_frame['label'].values
 train = train_frame.iloc[:,1:].values
-train = train.reshape(-1,28,28)
+# train = train.reshape(-1,28,28)
 print('Loaded {:d} train entries in {:.0f} seconds.'.format(len(train), clock() - start))
 
 # Train on fewer entries
@@ -18,8 +17,9 @@ print('Loaded {:d} train entries in {:.0f} seconds.'.format(len(train), clock() 
 
 # Read test data 
 start = clock()
-test = pd.read_csv('data/test.csv').values
-test = test.reshape(-1,28,28)
+test_frame = pd.read_csv('data/test.csv')
+test = test_frame.values
+# test = test.reshape(-1,28,28)
 print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - start))
 
 ### Visualize
@@ -33,8 +33,8 @@ def visualize(train, label):
     import matplotlib.pyplot as plt
     import matplotlib.cm as cm
     
-    # train_square = train.reshape(-1,28,28)
-    train_square = train
+    train_square = train.reshape(-1,28,28)
+    # train_square = train
     plt.imshow(train_square[i], cmap=cm.binary)
     plt.show()
 
@@ -71,8 +71,8 @@ def PCA(train, test):
 
 ### Select Classifier
 
-# from sklearn.ensemble import RandomForestClassifier
-# clf = RandomForestClassifier(n_estimators = 100)
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier(n_estimators = 100)
 
 # MLPClassifier requires 0.18dev+ and is not available in 0.17
 # from sklearn.neural_network import MLPClassifier
@@ -152,10 +152,10 @@ test = test.astype(np.float32)
 # from skflow import TensorFlowLinearRegressor
 # clf = TensorFlowLinearRegressor(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
 
-from skflow import TensorFlowDNNClassifier
+# from skflow import TensorFlowDNNClassifier
 # clf = TensorFlowDNNClassifier(hidden_units = [500, 1000, 1000, 1000, 1000, 500], 
-clf = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
-                              n_classes = 10, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
+# clf = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
+                              # n_classes = 10, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
 ### Optimize classifer's parameters
 
@@ -200,5 +200,6 @@ print("Extrapolated to test data in {:.0f} seconds.".format(clock() - start))
 
 ### Save results
 
-predict_table = np.c_[range(1,len(test)+1), predict]
-np.savetxt('predict.csv', predict_table, header='ImageId,Label', comments='', delimiter=',', fmt='%d')
+test_frame['ImageId'] = range(1,len(test)+1)
+test_frame['Label'] = predict[:,1]
+test_frame.to_csv(predict_file, cols = ('ImageId', 'Label'), index = None)
