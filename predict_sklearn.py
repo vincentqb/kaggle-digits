@@ -72,7 +72,7 @@ def PCA(train, test):
 ### Select Classifier
 
 from sklearn.ensemble import RandomForestClassifier
-clf = RandomForestClassifier(n_estimators = 100)
+# clf = RandomForestClassifier(n_estimators = 100)
 
 # MLPClassifier requires 0.18dev+ and is not available in 0.17
 # from sklearn.neural_network import MLPClassifier
@@ -139,9 +139,9 @@ def NeuralNet():
 # clf = NeuralNet()
 
 # Theano is strict on the format of floats and ints
-train = train.astype(np.float32)
-label = label.astype(np.int32)
-test = test.astype(np.float32)
+# train = train.astype(tf.float32)
+# label = label.astype(tf.int32)
+# test = test.astype(tf.float32)
 
 # Classifiers from Scikit Flow
 # Optimizer choices: SGD, Adam, Adagrad
@@ -202,4 +202,4 @@ print("Extrapolated to test data in {:.0f} seconds.".format(clock() - start))
 
 test_frame['ImageId'] = range(1,len(test)+1)
 test_frame['Label'] = predict
-test_frame.to_csv(predict_file, cols = ('ImageId', 'Label'), index = None)
+test_frame.to_csv("predict.csv", cols = ('ImageId', 'Label'), index = None)
