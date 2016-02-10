@@ -22,36 +22,10 @@ test = test_frame.values
 # test = test.reshape(-1,28,28)
 print('Loaded {:d} test entries in {:.0f} seconds.'.format(len(test), clock() - start))
 
-### Visualize
-
-def visualize(train, label):
-    from random import randint
-    
-    i = randint(0,len(train)-1)
-    print("Displayed train entry {:d} labelled {:d}.".format(i, label[i]))
-    
-    import matplotlib.pyplot as plt
-    import matplotlib.cm as cm
-    
-    train_square = train.reshape(-1,28,28)
-    # train_square = train
-    plt.imshow(train_square[i], cmap=cm.binary)
-    plt.show()
-
-# visualize(train, label)
-
 ### Transform data
 
 # from sklearn.preprocessing import StandardScaler
 # train = StandardScaler().fit_transform(train)
-
-def normalize(train, test):
-    train_max = train.max()
-
-    # Center data
-    train = 2*train - train_max
-    test = 2*test - train_max
-    return (train, test)
 
 def PCA(train, test):
     from sklearn.decomposition import PCA
@@ -70,9 +44,6 @@ def PCA(train, test):
 # (train, test) = PCA(train, test)
 
 ### Select Classifier
-
-from sklearn.ensemble import RandomForestClassifier
-# clf = RandomForestClassifier(n_estimators = 100)
 
 # MLPClassifier requires 0.18dev+ and is not available in 0.17
 # from sklearn.neural_network import MLPClassifier
@@ -103,59 +74,6 @@ def SVC():
     return clf
 
 # clf = SVC()
-
-# Lasagne classifier with neural network
-def NeuralNet():
-    from lasagne import layers
-    from lasagne.updates import nesterov_momentum
-    from lasagne.nonlinearities import softmax, rectify
-    from nolearn.lasagne import NeuralNet
-
-    return NeuralNet(
-        layers = [  
-            # Three layers: one hidden layer
-            ('input', layers.InputLayer),
-            ('hidden1', layers.DenseLayer),
-            # ('hidden2', layers.DenseLayer),
-            ('output', layers.DenseLayer),
-            ],
-
-        # Layer parameters
-        input_shape = (None, 28*28),
-        hidden1_num_units = 100,         # Number of units in hidden layer (10, 1000, ...)
-        # hidden2_num_units = 100,       # Number of units in hidden layer (10, 1000, ...)
-        output_nonlinearity = softmax,   # Output layer uses identity function
-        output_num_units = 10,           # Output 10 target values for the digits 0, 1, 2, ..., 9
-    
-        # Optimization method
-        update = nesterov_momentum,
-        update_learning_rate = 0.001,   # 0.01, 0.001, 0.0001, ...
-        update_momentum = 0.9,
-        max_epochs = 15,
-    
-        verbose = 1,
-        )
-
-# clf = NeuralNet()
-
-# Theano is strict on the format of floats and ints
-# train = train.astype(tf.float32)
-# label = label.astype(tf.int32)
-# test = test.astype(tf.float32)
-
-# Classifiers from Scikit Flow
-# Optimizer choices: SGD, Adam, Adagrad
-
-# from skflow import TensorFlowLinearClassifier
-# clf = TensorFlowLinearClassifier(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
-
-# from skflow import TensorFlowLinearRegressor
-# clf = TensorFlowLinearRegressor(n_classes = 10, batch_size = 256, steps = 1400, learning_rate = 0.01, optimizer = 'Adagrad')
-
-# from skflow import TensorFlowDNNClassifier
-# clf = TensorFlowDNNClassifier(hidden_units = [500, 1000, 1000, 1000, 1000, 500], 
-# clf = TensorFlowDNNClassifier(hidden_units = [100, 200, 200, 200, 100],
-                              # n_classes = 10, batch_size = 256, steps = 1000, learning_rate = 0.01, optimizer = 'Adagrad')
 
 ### Optimize classifer's parameters
 
