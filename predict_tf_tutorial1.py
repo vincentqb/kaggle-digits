@@ -67,7 +67,7 @@ next_batch = next_batch()
 images = valid_dataset
 labels = valid_labels
 
-# first_batch = next_batch(50)
+first_batch = next_batch(50)
 print(first_batch[1])
 print('Training set', first_batch[0].shape, first_batch[1].shape)
 print('Validation set', images.shape, labels.shape)

@@ -38,15 +38,25 @@ valid_dataset, valid_labels = reformat(valid_dataset, valid_labels)
 test_dataset = reformat(test_dataset)
 
 class next_batch():
+
+    last = 0
+    epochs = 0
+
     def __init__(self):
         from random import shuffle
-        self.indices = list(range(len(train_dataset)))
+        self.max_index = len(train_dataset)
+        self.indices = list(range(self.max_index))
         shuffle(self.indices)
-        self.last = 0
+
     def __call__(self, sample_size = 50):
+        if self.last > self.max_index:
+            self.epochs += 1
+            self.last = 0
+
         start = self.last 
         end = self.last = self.last + sample_size 
         indices = self.indices[start:end]
+
         return (train_dataset[indices], train_labels[indices])
 
 # def next_batch(sample_size = 50, indices = shuffle(range(1,len(train_dataset)+1)):
@@ -133,6 +143,7 @@ for i in range(20000):
     print("step %d, training accuracy %g"%(i, train_accuracy))
   train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 
+print(tf.argmax(y,1).eval(feed_dict={x: images}))
 print("test accuracy %g"%accuracy.eval(feed_dict={x: images, y_: labels, keep_prob: 1.0}))
 
 # Save predictions
