@@ -146,5 +146,5 @@ print("test accuracy %g"%accuracy.eval(feed_dict={x: images, y_: labels, keep_pr
 
 # Save predictions
 test_frame['ImageId'] = range(1, len(test_dataset)+1)
-test_frame['Label'] = tf.argmax(y_conv,1).eval(feed_dict={x: test_dataset})
+test_frame['Label'] = tf.argmax(y_conv,1).eval(feed_dict={x: test_dataset, keep_prob: 0.0})
 test_frame.to_csv('predict.csv', columns = ('ImageId', 'Label'), index = None)
