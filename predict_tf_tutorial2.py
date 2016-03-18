@@ -37,9 +37,23 @@ train_dataset, train_labels = reformat(train_dataset, train_labels)
 valid_dataset, valid_labels = reformat(valid_dataset, valid_labels)
 test_dataset = reformat(test_dataset)
 
-def next_batch(sample_size = 50):
-    indices = np.random.choice(len(train_dataset), sample_size)
-    return (train_dataset[indices], train_labels[indices])
+class next_batch():
+    def __init__(self):
+        from random import shuffle
+        self.indices = list(range(len(train_dataset)))
+        shuffle(self.indices)
+        self.last = 0
+    def __call__(self, sample_size = 50):
+        start = self.last 
+        end = self.last + sample_size - 1
+        self.last = end + 1
+
+        indices = self.indices[start:end]
+        return (train_dataset[indices], train_labels[indices])
+
+# def next_batch(sample_size = 50, indices = shuffle(range(1,len(train_dataset)+1)):
+#     indices = np.random.choice(len(train_dataset), sample_size, replace = False)
+#     return (train_dataset[indices], train_labels[indices])
 
 next_batch = next_batch
 images = valid_dataset
@@ -107,6 +121,7 @@ train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 sess.run(tf.initialize_all_variables())
+
 for i in range(20000):
   batch = next_batch(50)
   if i%100 == 0:
@@ -115,6 +130,9 @@ for i in range(20000):
     print("step %d, training accuracy %g"%(i, train_accuracy))
   train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 
-print("test accuracy %g"%accuracy.eval(feed_dict={
-    x: images, y_: labels, keep_prob: 1.0}))
+print("test accuracy %g"%accuracy.eval(feed_dict={x: images, y_: labels, keep_prob: 1.0}))
 
+# Save predictions
+test_frame['ImageId'] = range(1, len(test_dataset)+1)
+test_frame['Label'] = tf.argmax(y_conv,1).eval(feed_dict={x: test_dataset})
+test_frame.to_csv('predict.csv', columns = ('ImageId', 'Label'), index = None)

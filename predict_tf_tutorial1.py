@@ -39,14 +39,16 @@ test_dataset = reformat(test_dataset)
 
 class next_batch():
     def __init__(self):
-        self.indices = shuffle(range(1, len(train_dataset)+1))
+        from random import shuffle
+        self.indices = list(range(len(train_dataset)))
+        shuffle(self.indices)
         self.last = 0
     def __call__(self, sample_size = 50):
         start = self.last 
         end = self.last + sample_size - 1
         self.last = end + 1
 
-        indices = self.indices[start, end]
+        indices = self.indices[start:end]
         return (train_dataset[indices], train_labels[indices])
 
 # def next_batch(sample_size = 50, indices = shuffle(range(1,len(train_dataset)+1)):
