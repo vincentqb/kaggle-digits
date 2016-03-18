@@ -23,12 +23,15 @@ test_frame = pd.read_csv('data/test.csv')
 test_dataset = test_frame.values
 
 def reformat(dataset, labels = None):
-  # image_size = 28
+  image_size = 28
   num_labels = 10
   # num_channels = 1 # grayscale
   # dataset = dataset.reshape((-1, image_size, image_size, num_channels)).astype(np.float32)
+  dataset = dataset.reshape((-1, image_size * image_size)).astype(np.float32)
+  # dataset = dataset.astype(np.float32)
   if labels is not None:
       labels = (np.arange(num_labels) == labels[:,None]).astype(np.float32)
+      # labels = (np.arange(num_labels) == labels[:,None]).astype(np.int32)
       return dataset, labels
   else:
       return dataset
@@ -37,14 +40,22 @@ train_dataset, train_labels = reformat(train_dataset, train_labels)
 valid_dataset, valid_labels = reformat(valid_dataset, valid_labels)
 test_dataset = reformat(test_dataset)
 
+# Need normalization
+train_dataset = train_dataset / 255
+valid_dataset = valid_dataset / 255
+test_dataset = test_dataset / 255
+
 class next_batch():
 
     last = 0
     epochs = 0
 
-    def __init__(self):
+    def __init__(self, images, labels):
+        self.images = images
+        self.labels = labels
+
         from random import shuffle
-        self.max_index = len(train_dataset)
+        self.max_index = len(images)
         self.indices = list(range(self.max_index))
         shuffle(self.indices)
 
@@ -57,19 +68,19 @@ class next_batch():
         end = self.last = self.last + sample_size 
         indices = self.indices[start:end]
 
-        return (train_dataset[indices], train_labels[indices])
+        return (self.images[indices], self.labels[indices])
 
 # def next_batch(sample_size = 50, indices = shuffle(range(1,len(train_dataset)+1)):
 #     indices = np.random.choice(len(train_dataset), sample_size, replace = False)
 #     return (train_dataset[indices], train_labels[indices])
 
-next_batch = next_batch()
+next_batch = next_batch(train_dataset, train_labels)
 images = valid_dataset
 labels = valid_labels
 
-first_batch = next_batch(50)
-print(first_batch[1])
-print('Training set', first_batch[0].shape, first_batch[1].shape)
+# first_batch = next_batch(50)
+# print(first_batch[1])
+# print('Training set', first_batch[0].shape, first_batch[1].shape)
 print('Validation set', images.shape, labels.shape)
 print('Test set', test_dataset.shape)
 
@@ -77,14 +88,17 @@ print('Test set', test_dataset.shape)
 
 # from tensorflow.examples.tutorials.mnist import input_data
 # mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
-# 
+
+# next_batch = next_batch(mnist.train.images, mnist.train.labels.astype(np.float32))
 # next_batch = mnist.train.next_batch
 # images = mnist.test.images
 # labels = mnist.test.labels
-# 
-# first_batch = next_batch(50)
-# print('Training set', first_batch[0].shape, first_batch[1].shape)
-# print('Validation set', images.shape, labels.shape)
+
+# next_batch = next_batch(mnist.train.images[:len(train_labels)], train_labels)
+
+first_batch = next_batch(50)
+print('Training set', first_batch[0].shape, first_batch[1].shape)
+print('Validation set', images.shape, labels.shape)
 
 import tensorflow as tf
 sess = tf.InteractiveSession()
@@ -109,6 +123,6 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 print(accuracy.eval(feed_dict={x: images, y_: labels}))
 
 # Save predictions
-# test_frame['ImageId'] = range(1, len(test_dataset)+1)
-# test_frame['Label'] = tf.argmax(y,1).eval(feed_dict={x: test_dataset})
-# test_frame.to_csv('predict.csv', columns = ('ImageId', 'Label'), index = None)
+test_frame['ImageId'] = range(1, len(test_dataset)+1)
+test_frame['Label'] = tf.argmax(y,1).eval(feed_dict={x: test_dataset})
+test_frame.to_csv('predict.csv', columns = ('ImageId', 'Label'), index = None)
