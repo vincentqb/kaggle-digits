@@ -25,13 +25,9 @@ test_dataset = test_frame.values
 def reformat(dataset, labels = None):
   image_size = 28
   num_labels = 10
-  # num_channels = 1 # grayscale
-  # dataset = dataset.reshape((-1, image_size, image_size, num_channels)).astype(np.float32)
-  dataset = dataset.reshape((-1, image_size * image_size)).astype(np.float32)
-  # dataset = dataset.astype(np.float32)
+  dataset = dataset.astype(np.float32)
   if labels is not None:
       labels = (np.arange(num_labels) == labels[:,None]).astype(np.float32)
-      # labels = (np.arange(num_labels) == labels[:,None]).astype(np.int32)
       return dataset, labels
   else:
       return dataset
@@ -78,12 +74,6 @@ next_batch = next_batch(train_dataset, train_labels)
 images = valid_dataset
 labels = valid_labels
 
-# first_batch = next_batch(50)
-# print(first_batch[1])
-# print('Training set', first_batch[0].shape, first_batch[1].shape)
-print('Validation set', images.shape, labels.shape)
-print('Test set', test_dataset.shape)
-
 # Tensor flow includes MNIST
 
 # from tensorflow.examples.tutorials.mnist import input_data
@@ -93,12 +83,6 @@ print('Test set', test_dataset.shape)
 # next_batch = mnist.train.next_batch
 # images = mnist.test.images
 # labels = mnist.test.labels
-
-# next_batch = next_batch(mnist.train.images[:len(train_labels)], train_labels)
-
-first_batch = next_batch(50)
-print('Training set', first_batch[0].shape, first_batch[1].shape)
-print('Validation set', images.shape, labels.shape)
 
 import tensorflow as tf
 sess = tf.InteractiveSession()
@@ -115,8 +99,6 @@ train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
 for i in range(1000):
   batch = next_batch(50)
   train_step.run(feed_dict={x: batch[0], y_: batch[1]})
-
-print(tf.argmax(y,1).eval(feed_dict={x: images}))
 
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
