@@ -37,11 +37,23 @@ train_dataset, train_labels = reformat(train_dataset, train_labels)
 valid_dataset, valid_labels = reformat(valid_dataset, valid_labels)
 test_dataset = reformat(test_dataset)
 
-def next_batch(sample_size = 50):
-    indices = np.random.choice(len(train_dataset), sample_size)
-    return (train_dataset[indices], train_labels[indices])
+class next_batch():
+    def __init__(self):
+        self.indices = shuffle(range(1, len(train_dataset)+1))
+        self.last = 0
+    def __call__(self, sample_size = 50):
+        start = self.last 
+        end = self.last + sample_size - 1
+        self.last = end + 1
 
-next_batch = next_batch
+        indices = self.indices[start, end]
+        return (train_dataset[indices], train_labels[indices])
+
+# def next_batch(sample_size = 50, indices = shuffle(range(1,len(train_dataset)+1)):
+#     indices = np.random.choice(len(train_dataset), sample_size)
+#     return (train_dataset[indices], train_labels[indices])
+
+next_batch = next_batch()
 images = valid_dataset
 labels = valid_labels
 
