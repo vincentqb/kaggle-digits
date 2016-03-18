@@ -24,7 +24,7 @@ test_dataset = test_frame.values
 
 def reformat(dataset, labels = None):
   # image_size = 28
-  # num_labels = 10
+  num_labels = 10
   # num_channels = 1 # grayscale
   # dataset = dataset.reshape((-1, image_size, image_size, num_channels)).astype(np.float32)
   if labels is not None:
