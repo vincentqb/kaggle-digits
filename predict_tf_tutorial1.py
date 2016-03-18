@@ -38,7 +38,7 @@ valid_dataset, valid_labels = reformat(valid_dataset, valid_labels)
 test_dataset = reformat(test_dataset)
 
 def next_batch(sample_size = 50):
-    indices = np.random.choice(len(train_dataset), sample_size)
+    indices = np.random.choice(len(train_dataset), sample_size, replace = False)
     return (train_dataset[indices], train_labels[indices])
 
 next_batch = next_batch
@@ -77,3 +77,8 @@ for i in range(1000):
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 print(accuracy.eval(feed_dict={x: images, y_: labels}))
+
+# Save predictions
+test_frame['ImageId'] = range(1, len(test_dataset)+1)
+test_frame['Label'] = tf.argmax(y,1).eval(feed_dict={x: test_dataset})
+test_frame.to_csv('predict.csv', columns = ('ImageId', 'Label'), index = None)
