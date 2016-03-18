@@ -38,15 +38,25 @@ valid_dataset, valid_labels = reformat(valid_dataset, valid_labels)
 test_dataset = reformat(test_dataset)
 
 class next_batch():
+
+    last = 0
+    epochs = 0
+
     def __init__(self):
         from random import shuffle
-        self.indices = list(range(len(train_dataset)))
+        self.max_index = len(train_dataset)
+        self.indices = list(range(self.max_index))
         shuffle(self.indices)
-        self.last = 0
+
     def __call__(self, sample_size = 50):
+        if self.last > self.max_index:
+            self.epochs += 1
+            self.last = 0
+
         start = self.last 
         end = self.last = self.last + sample_size 
         indices = self.indices[start:end]
+
         return (train_dataset[indices], train_labels[indices])
 
 # def next_batch(sample_size = 50, indices = shuffle(range(1,len(train_dataset)+1)):
@@ -57,7 +67,8 @@ next_batch = next_batch()
 images = valid_dataset
 labels = valid_labels
 
-first_batch = next_batch(50)
+# first_batch = next_batch(50)
+print(first_batch[1])
 print('Training set', first_batch[0].shape, first_batch[1].shape)
 print('Validation set', images.shape, labels.shape)
 print('Test set', test_dataset.shape)
@@ -90,6 +101,8 @@ train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy)
 for i in range(1000):
   batch = next_batch(50)
   train_step.run(feed_dict={x: batch[0], y_: batch[1]})
+
+print(tf.argmax(y,1).eval(feed_dict={x: images}))
 
 correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
