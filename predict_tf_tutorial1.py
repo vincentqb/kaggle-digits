@@ -45,9 +45,7 @@ class next_batch():
         self.last = 0
     def __call__(self, sample_size = 50):
         start = self.last 
-        end = self.last + sample_size - 1
-        self.last = end + 1
-
+        end = self.last = self.last + sample_size 
         indices = self.indices[start:end]
         return (train_dataset[indices], train_labels[indices])
 
@@ -59,18 +57,23 @@ next_batch = next_batch()
 images = valid_dataset
 labels = valid_labels
 
+first_batch = next_batch(50)
+print('Training set', first_batch[0].shape, first_batch[1].shape)
+print('Validation set', images.shape, labels.shape)
+print('Test set', test_dataset.shape)
+
 # Tensor flow includes MNIST
 
 # from tensorflow.examples.tutorials.mnist import input_data
 # mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
-
+# 
 # next_batch = mnist.train.next_batch
 # images = mnist.test.images
 # labels = mnist.test.labels
-
-# print('Training set', train_dataset.shape, train_labels.shape)
+# 
+# first_batch = next_batch(50)
+# print('Training set', first_batch[0].shape, first_batch[1].shape)
 # print('Validation set', images.shape, labels.shape)
-# print('Test set', test_dataset.shape)
 
 import tensorflow as tf
 sess = tf.InteractiveSession()
@@ -93,6 +96,6 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 print(accuracy.eval(feed_dict={x: images, y_: labels}))
 
 # Save predictions
-test_frame['ImageId'] = range(1, len(test_dataset)+1)
-test_frame['Label'] = tf.argmax(y,1).eval(feed_dict={x: test_dataset})
-test_frame.to_csv('predict.csv', columns = ('ImageId', 'Label'), index = None)
+# test_frame['ImageId'] = range(1, len(test_dataset)+1)
+# test_frame['Label'] = tf.argmax(y,1).eval(feed_dict={x: test_dataset})
+# test_frame.to_csv('predict.csv', columns = ('ImageId', 'Label'), index = None)
