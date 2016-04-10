@@ -153,6 +153,7 @@ with graph.as_default():
 # In[ ]:
 
 num_steps = 1001
+# num_steps = 20000
 
 start = clock()
 loss_epoch = {}
