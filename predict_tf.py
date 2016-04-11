@@ -136,7 +136,7 @@ with graph.as_default():
     reshape = tf.reshape(hidden, [shape[0], shape[1] * shape[2] * shape[3]])
     hidden = tf.nn.relu(tf.matmul(reshape, layer3_weights) + layer3_biases)
 
-    # hidden = tf.nn.dropout(hidden, keep_prob)
+    hidden = tf.nn.dropout(hidden, keep_prob)
 
     return tf.matmul(hidden, layer4_weights) + layer4_biases
   
@@ -172,7 +172,7 @@ with tf.Session(graph=graph) as session:
       offset = (step * batch_size) % (train_labels.shape[0] - batch_size)
       batch_data = train_dataset[offset:(offset + batch_size), :, :, :]
       batch_labels = train_labels[offset:(offset + batch_size), :]
-      feed_dict = {tf_train_dataset : batch_data, tf_train_labels : batch_labels}
+      feed_dict = {tf_train_dataset : batch_data, tf_train_labels : batch_labels, keep_prob : 1.0}
       # feed_dict = {tf_train_dataset : batch_data, tf_train_labels : batch_labels, keep_prob : 0.5}
       _, l, predictions = session.run([optimizer, loss, train_prediction], feed_dict=feed_dict)
     
@@ -183,8 +183,8 @@ with tf.Session(graph=graph) as session:
             
         print('Minibatch loss at step %d: %f' % (step, l))
         print('Minibatch accuracy: %.1f%%' % accuracy(predictions, batch_labels))
-        print('Validation accuracy: %.1f%%' % accuracy(valid_prediction.eval(), valid_labels))
-        # print('Validation accuracy: %.1f%%' % accuracy(valid_prediction.eval({keep_prob : 1.0}), valid_labels))
+        # print('Validation accuracy: %.1f%%' % accuracy(valid_prediction.eval(), valid_labels))
+        print('Validation accuracy: %.1f%%' % accuracy(valid_prediction.eval({keep_prob : 1.0}), valid_labels))
   except KeyboardInterrupt:
     print('Interrupted during step {}'.format(step))
     pass
@@ -193,7 +193,7 @@ with tf.Session(graph=graph) as session:
 
   # Save predictions
   test_frame['ImageId'] = range(1, len(test_dataset)+1)
-  test_frame['Label'] = np.argmax(test_prediction.eval(), 1)
+  test_frame['Label'] = np.argmax(test_prediction.eval({keep_prob : 1.0}), 1)
   test_frame.to_csv('predict.csv', columns = ('ImageId', 'Label'), index = None)
 
 # Print elapsed time
