@@ -176,7 +176,7 @@ with tf.Session(graph=graph) as session:
       # feed_dict = {tf_train_dataset : batch_data, tf_train_labels : batch_labels, keep_prob : 0.5}
       _, l, predictions = session.run([optimizer, loss, train_prediction], feed_dict=feed_dict)
     
-      if (step % 50 == 0):      
+      if (step % 100 == 0):      
         # Collect loss vs epochs for plotting
         epoch = batch_size * step / train_labels.shape[0]
         loss_epoch[epoch] = l
