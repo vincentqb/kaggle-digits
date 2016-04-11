@@ -145,8 +145,8 @@ with graph.as_default():
   loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits, tf_train_labels))
     
   # Optimizer.
-  optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
-  # optimizer = tf.train.AdamOptimizer(learning_rate).minimize(loss)
+  # optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss)
+  optimizer = tf.train.AdamOptimizer(learning_rate).minimize(loss)
   
   # Predictions for the training, validation, and test data.
   train_prediction = tf.nn.softmax(logits)
@@ -156,9 +156,9 @@ with graph.as_default():
 
 # In[ ]:
 
-num_steps = 1001
+# num_steps = 1001
 # num_steps = 500001
-# num_steps = 20000
+num_steps = 20000
 
 start = clock()
 loss_epoch = {}
@@ -172,8 +172,7 @@ with tf.Session(graph=graph) as session:
       offset = (step * batch_size) % (train_labels.shape[0] - batch_size)
       batch_data = train_dataset[offset:(offset + batch_size), :, :, :]
       batch_labels = train_labels[offset:(offset + batch_size), :]
-      feed_dict = {tf_train_dataset : batch_data, tf_train_labels : batch_labels, keep_prob : 1.0}
-      # feed_dict = {tf_train_dataset : batch_data, tf_train_labels : batch_labels, keep_prob : 0.5}
+      feed_dict = {tf_train_dataset : batch_data, tf_train_labels : batch_labels, keep_prob : 0.5}
       _, l, predictions = session.run([optimizer, loss, train_prediction], feed_dict=feed_dict)
     
       if (step % 100 == 0):      
