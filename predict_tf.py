@@ -14,8 +14,8 @@ import pandas as pd
 from time import clock
 
 # Force matplotlib to not use any Xwindows backend.
-# import matplotlib
-# matplotlib.use('Agg')
+import matplotlib
+matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 # get_ipython().magic('matplotlib inline')
@@ -194,7 +194,7 @@ with tf.Session(graph=graph) as session:
   # Save predictions
   test_frame['ImageId'] = range(1, len(test_dataset)+1)
   test_frame['Label'] = np.argmax(test_prediction.eval(), 1)
-  test_frame.to_csv('predict.csv', cols = ('ImageId', 'Label'), index = None)
+  test_frame.to_csv('predict.csv', columns = ('ImageId', 'Label'), index = None)
 
 # Print elapsed time
 print('Elapsed time: {:.0f} seconds.'.format(clock() - start))
