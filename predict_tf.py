@@ -78,6 +78,10 @@ print('Training set', train_dataset.shape, train_labels.shape)
 print('Validation set', valid_dataset.shape, valid_labels.shape)
 print('Test set', test_dataset.shape)
 
+# Need normalization
+train_dataset = train_dataset / 255
+valid_dataset = valid_dataset / 255
+test_dataset = test_dataset / 255
 
 # In[ ]:
 
@@ -153,6 +157,7 @@ with graph.as_default():
 # In[ ]:
 
 num_steps = 1001
+# num_steps = 500001
 # num_steps = 20000
 
 start = clock()
@@ -161,6 +166,7 @@ loss_epoch = {}
 with tf.Session(graph=graph) as session:
   tf.initialize_all_variables().run()
   print('Initialized')
+  # Enable keyboard interruption when running as script
   try:
     for step in range(num_steps):
       offset = (step * batch_size) % (train_labels.shape[0] - batch_size)
@@ -206,5 +212,4 @@ plt.axis('tight')
 
 # Save and display figure
 plt.savefig('loss.png', bbox_inches='tight')
-plt.show()
-
+# plt.show()
