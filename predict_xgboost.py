@@ -1,4 +1,9 @@
-# Kaggle Digit Recognition import pandas as pd import xgboost as xgb from time import clock # Read training data
+# Kaggle Digit Recognition 
+import pandas as pd
+import xgboost as xgb
+from time import clock
+
+# Read training data
 start = clock()
 
 train_frame = pd.read_csv('data/train.csv')
@@ -61,5 +66,5 @@ print("Trained and Extrapolated in {:.0f} seconds.".format(clock() - start))
 # Save results
 
 test_frame['ImageId'] = range(1,len(test)+1)
-test_frame['Label'] = predict
-test_frame.to_csv('predict.csv', cols = ('ImageId', 'Label'), index = None)
+test_frame['Label'] = map(int, predict)
+test_frame.to_csv('predict.csv', columns = ('ImageId', 'Label'), index = None)
